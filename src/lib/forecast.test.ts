@@ -42,7 +42,8 @@ describe("forecast domain", () => {
     const copy = productBoundaries.join(" ").toLowerCase();
 
     expect(copy).toContain("no order execution");
-    expect(copy).toContain("portfolio management");
+    expect(copy).toContain("portfolio simulation");
+    expect(copy).toContain("personalized advice");
     expect(copy).not.toContain("buy signal");
     expect(copy).not.toContain("sell signal");
     expect(copy).not.toContain("target price");
