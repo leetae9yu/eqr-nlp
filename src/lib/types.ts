@@ -44,12 +44,29 @@ export type MacroSnapshot = {
   series: Array<{ date: string; value: number }>;
 };
 
+export type CalibrationContext = {
+  runId: string;
+  weightId: string;
+  weight: number;
+  sampleSize: number;
+  mae: number;
+  rmse: number;
+  smape: number;
+};
+
 export type HorizonForecast = {
   horizon: ForecastHorizon;
   direction: Direction;
   impact: number;
   confidence: number;
   rationale: string;
+  calibration?: CalibrationContext;
+};
+
+export type GraphEvidencePath = {
+  nodeIds: string[];
+  relationshipTypes: string[];
+  citations: string[];
 };
 
 export type IndicatorForecast = {
@@ -62,6 +79,7 @@ export type IndicatorForecast = {
   confidence: number;
   forecasts: HorizonForecast[];
   evidence: Evidence[];
+  graphEvidencePath?: GraphEvidencePath;
   uncertainty: string[];
   series: Array<{ date: string; value: number }>;
 };

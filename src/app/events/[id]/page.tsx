@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AnalystNotes } from "@/components/AnalystNotes";
+import { CalibrationPanel } from "@/components/CalibrationPanel";
 import { EvidencePanel } from "@/components/EvidencePanel";
 import { ImpactCard } from "@/components/ImpactCard";
 import { getEventById, sampleEvents } from "@/lib/events";
@@ -16,6 +17,13 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   if (!event) notFound();
 
   const analysis = await analyzeEvent(event);
+  const calibrations = Array.from(
+    new Map(
+      analysis.forecasts
+        .flatMap((forecast) => forecast.forecasts.flatMap((horizon) => horizon.calibration ? [horizon.calibration] : []))
+        .map((item) => [item.weightId, item]),
+    ).values(),
+  );
   const evidence = Array.from(
     new Map(
       analysis.forecasts
@@ -45,6 +53,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       </section>
 
       <EvidencePanel evidence={evidence} />
+      <CalibrationPanel calibrations={calibrations} />
       <AnalystNotes eventId={event.id} />
 
       <section className="panel warning-panel">

@@ -23,6 +23,21 @@ describe("forecast domain", () => {
     expect(second).toEqual(first);
   });
 
+  it("includes graph path and backtest calibration context when available", async () => {
+    const analysis = await analyzeEvent(sampleEvents[0]);
+    const calibratedHorizons = analysis.forecasts.flatMap((forecast) => forecast.forecasts.filter((horizon) => horizon.calibration));
+
+    expect(analysis.forecasts.every((forecast) => forecast.graphEvidencePath?.relationshipTypes.includes("CALIBRATED"))).toBe(true);
+    expect(calibratedHorizons.length).toBeGreaterThan(0);
+    expect(calibratedHorizons[0].calibration).toMatchObject({
+      runId: expect.stringContaining("backtest:"),
+      sampleSize: expect.any(Number),
+      mae: expect.any(Number),
+      rmse: expect.any(Number),
+      smape: expect.any(Number),
+    });
+  });
+
   it("keeps structured product boundaries out of trading tooling", () => {
     const copy = productBoundaries.join(" ").toLowerCase();
 
