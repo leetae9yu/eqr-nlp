@@ -16,7 +16,13 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   if (!event) notFound();
 
   const analysis = await analyzeEvent(event);
-  const evidence = analysis.forecasts.flatMap((forecast) => forecast.evidence);
+  const evidence = Array.from(
+    new Map(
+      analysis.forecasts
+        .flatMap((forecast) => forecast.evidence)
+        .map((item) => [`${item.label}|${item.url}|${item.quote}`, item]),
+    ).values(),
+  );
 
   return (
     <main className="shell">

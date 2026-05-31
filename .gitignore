@@ -12,3 +12,6 @@ test-results
 .omx/state/
 .omx/logs/
 .omx/metrics.json
+
+.omx/
+tsconfig.tsbuildinfo

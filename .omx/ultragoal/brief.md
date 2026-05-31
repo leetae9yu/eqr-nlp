@@ -1,1 +1,0 @@
-Implement the approved EQR NLP Korea macro forecast SaaS MVP from .omx/plans/prd-korea-finance-forecast-saas.md and .omx/plans/test-spec-korea-finance-forecast-saas.md. Commit after each story. Final step creates/pushes public GitHub repo eqr-nlp.

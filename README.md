@@ -49,14 +49,14 @@ npm run lint
 npm run build
 ```
 
+## Architecture and fixture provenance
+
+- [Architecture notes](./docs/architecture.md)
+- [Fixture provenance](./docs/fixture-provenance.md)
+
 ## Project artifacts
 
-Planning and requirements live under `.omx/`:
-
-- `.omx/specs/deep-interview-korea-finance-forecast-saas.md`
-- `.omx/plans/prd-korea-finance-forecast-saas.md`
-- `.omx/plans/test-spec-korea-finance-forecast-saas.md`
-- `.omx/ultragoal/goals.json`
+Local OMX planning artifacts are not tracked in the public repository. Public implementation rationale is summarized in `docs/`.
 
 ## Live integration follow-ups
 

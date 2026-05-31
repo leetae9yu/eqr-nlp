@@ -1,5 +1,9 @@
 import type { Evidence } from "@/lib/types";
 
+function evidenceKey(item: Evidence) {
+  return `${item.label}|${item.url}|${item.quote}`;
+}
+
 export function EvidencePanel({ evidence }: { evidence: Evidence[] }) {
   return (
     <section className="panel">
@@ -9,7 +13,7 @@ export function EvidencePanel({ evidence }: { evidence: Evidence[] }) {
       </div>
       <div className="evidence-list">
         {evidence.map((item) => (
-          <a className="evidence-item" key={`${item.label}-${item.url}`} href={item.url} target="_blank" rel="noreferrer">
+          <a className="evidence-item" key={evidenceKey(item)} href={item.url} target="_blank" rel="noreferrer">
             <strong>{item.label}</strong>
             <span>{item.source}</span>
             <p>{item.quote}</p>

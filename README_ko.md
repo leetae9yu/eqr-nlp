@@ -49,6 +49,11 @@ npm run lint
 npm run build
 ```
 
+## 아키텍처와 fixture 출처
+
+- [Architecture notes](./docs/architecture.md)
+- [Fixture provenance](./docs/fixture-provenance.md)
+
 ## 후속 live 연동 후보
 
 - RSS/GDELT 스타일 저마찰 feed 어댑터
