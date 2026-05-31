@@ -15,6 +15,7 @@ export default function HomePage() {
         </p>
         <div className="hero-actions">
           <Link className="primary-link" href={`/events/${sampleEvents[0].id}`}>Open sample analysis</Link>
+          <Link className="secondary-link" href="/graph">View knowledge graph</Link>
           <a className="secondary-link" href="https://github.com/emceeKim/korea-finance-mcp" target="_blank" rel="noreferrer">korea-finance-mcp</a>
         </div>
       </section>
