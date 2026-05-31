@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T05:56:05.172Z",
-  "updatedAt": "2026-05-31T05:56:05.172Z",
+  "updatedAt": "2026-05-31T05:58:38.857Z",
   "briefPath": ".omx/ultragoal/brief.md",
   "goalsPath": ".omx/ultragoal/goals.json",
   "ledgerPath": ".omx/ultragoal/ledger.jsonl",
@@ -11,10 +11,13 @@
       "id": "G001-scaffold-vercel-ready-app",
       "title": "Scaffold Vercel-ready app",
       "objective": "Create a Next.js TypeScript project with scripts, lint/test/build tooling, gitignore, and README placeholders.",
-      "status": "pending",
-      "attempt": 0,
+      "status": "complete",
+      "attempt": 1,
       "createdAt": "2026-05-31T05:56:05.172Z",
-      "updatedAt": "2026-05-31T05:56:05.172Z"
+      "updatedAt": "2026-05-31T05:58:38.857Z",
+      "startedAt": "2026-05-31T05:56:34.571Z",
+      "completedAt": "2026-05-31T05:58:38.857Z",
+      "evidence": "Scaffolded Next.js 16 TypeScript app with lint/test/build scripts, ESLint, Vitest, README placeholders, and verified npm run lint plus npm run build."
     },
     {
       "id": "G002-build-deterministic-forecast-domain",
@@ -53,5 +56,8 @@
       "updatedAt": "2026-05-31T05:56:05.172Z"
     }
   ],
-  "codexObjective": "Complete the durable ultragoal plan in .omx/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .omx/ultragoal/ledger.jsonl as the audit trail."
+  "codexObjective": "Complete the durable ultragoal plan in .omx/ultragoal/goals.json for the EQR NLP Korea macro forecast SaaS MVP, checkpointing .omx/ultragoal/ledger.jsonl after each story and preserving the ralplan constraints.",
+  "codexObjectiveAliases": [
+    "Complete the durable ultragoal plan in .omx/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .omx/ultragoal/ledger.jsonl as the audit trail."
+  ]
 }
