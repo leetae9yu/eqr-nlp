@@ -7,11 +7,13 @@ Use small, deterministic checks that prove the v0 demo contract without relying 
 ## Unit Tests
 
 - Forecast pipeline returns all four basket indicators for each event.
+- Domain types preserve event, macro snapshot, evidence, indicator forecast, horizon forecast, and event analysis boundaries.
 - Each indicator includes exactly 1D, 1W, and 1M horizons.
 - Scoring is deterministic for a fixed event and macro snapshot.
-- Evidence list is non-empty and includes URL/source metadata.
+- Evidence list is non-empty and includes URL/source metadata plus fixture/MCP provenance.
 - Confidence/uncertainty flags are present for every indicator.
-- Guardrail copy excludes order execution, portfolio management, and real-time trading-signal language in structured product constants.
+- Guardrail copy excludes order execution, portfolio management, and advice-like trading wording in structured product constants.
+- Analyst note storage reads/writes per event through localStorage without external services.
 
 ## Integration / Component Checks
 

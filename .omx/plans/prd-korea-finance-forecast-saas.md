@@ -96,6 +96,15 @@ Build a greenfield, Vercel-friendly Next.js demo for analysts. The demo ingests 
    - Run final cleanup/review checks.
    - Create public GitHub repo `eqr-nlp` and push if authenticated.
 
+
+## Architect ITERATE Revisions Incorporated
+
+- Domain schema must be explicit: `NewsEvent`, `MacroSnapshot`, `Evidence`, `IndicatorForecast`, and `EventAnalysis` are first-class TypeScript types under `src/lib/`.
+- Forecast semantics must be labeled as deterministic research scenario scoring, not production prediction accuracy. Each indicator has direction, impact score, confidence, horizon rationales, evidence, and uncertainty.
+- Mock adapter provenance must be visible: fixture data is clearly labeled as sample ECOS/KRX/MCP-adapter data until live korea-finance-mcp transport is configured.
+- Persistence is intentionally low-friction: analyst notes use localStorage for v0 and need no database account.
+- Tests must cover schema completeness, deterministic forecasts, evidence/uncertainty presence, boundary copy, and local note persistence.
+
 ## Testable Acceptance Criteria
 
 - App can be installed and run locally with `npm install` and `npm run dev`.

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T05:56:05.172Z",
-  "updatedAt": "2026-05-31T05:58:38.857Z",
+  "updatedAt": "2026-05-31T06:01:14.236Z",
   "briefPath": ".omx/ultragoal/brief.md",
   "goalsPath": ".omx/ultragoal/goals.json",
   "ledgerPath": ".omx/ultragoal/ledger.jsonl",
@@ -23,10 +23,13 @@
       "id": "G002-build-deterministic-forecast-domain",
       "title": "Build deterministic forecast domain",
       "objective": "Implement typed macro basket, sample news events, korea-finance-mcp adapter boundary, deterministic scoring, evidence, uncertainty, time-series data, and unit tests.",
-      "status": "pending",
-      "attempt": 0,
+      "status": "complete",
+      "attempt": 1,
       "createdAt": "2026-05-31T05:56:05.172Z",
-      "updatedAt": "2026-05-31T05:56:05.172Z"
+      "updatedAt": "2026-05-31T06:01:14.236Z",
+      "startedAt": "2026-05-31T06:01:13.924Z",
+      "completedAt": "2026-05-31T06:01:14.236Z",
+      "evidence": "Implemented typed macro basket, sample low-friction events, fixture korea-finance-mcp adapter boundary, deterministic multi-horizon scoring, evidence/provenance/uncertainty, and unit tests. Verified npm run lint and npm test."
     },
     {
       "id": "G003-build-analyst-dashboard",
