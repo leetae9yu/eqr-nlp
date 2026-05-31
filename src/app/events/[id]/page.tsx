@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AnalystNotes } from "@/components/AnalystNotes";
 import { EvidencePanel } from "@/components/EvidencePanel";
 import { ImpactCard } from "@/components/ImpactCard";
 import { getEventById, sampleEvents } from "@/lib/events";
@@ -38,6 +39,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       </section>
 
       <EvidencePanel evidence={evidence} />
+      <AnalystNotes eventId={event.id} />
 
       <section className="panel warning-panel">
         <div className="section-heading">

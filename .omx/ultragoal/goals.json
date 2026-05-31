@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T05:56:05.172Z",
-  "updatedAt": "2026-05-31T06:03:18.746Z",
+  "updatedAt": "2026-05-31T06:05:06.959Z",
   "briefPath": ".omx/ultragoal/brief.md",
   "goalsPath": ".omx/ultragoal/goals.json",
   "ledgerPath": ".omx/ultragoal/ledger.jsonl",
@@ -47,10 +47,13 @@
       "id": "G004-add-analyst-notes-and-docs",
       "title": "Add analyst notes and docs",
       "objective": "Implement localStorage analyst notes and write English README plus linked README_ko with setup, scope, limitations, and public repo guidance.",
-      "status": "pending",
-      "attempt": 0,
+      "status": "complete",
+      "attempt": 1,
       "createdAt": "2026-05-31T05:56:05.172Z",
-      "updatedAt": "2026-05-31T05:56:05.172Z"
+      "updatedAt": "2026-05-31T06:05:06.959Z",
+      "startedAt": "2026-05-31T06:04:12.977Z",
+      "completedAt": "2026-05-31T06:05:06.959Z",
+      "evidence": "Implemented browser-local analyst notes with localStorage helpers/tests and wrote English README plus linked README_ko covering setup, scope, limitations, and follow-ups. Verified npm test, npm run lint, npm run build."
     },
     {
       "id": "G005-verify-and-publish",

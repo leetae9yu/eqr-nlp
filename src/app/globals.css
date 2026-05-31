@@ -64,3 +64,6 @@ details { color: var(--muted); line-height: 1.7; }
 summary { cursor: pointer; color: var(--text); font-weight: 800; margin-top: 12px; }
 .warning-panel { border-color: rgba(252, 211, 77, .35); }
 @media (max-width: 860px) { .two-col, .impact-grid { grid-template-columns: 1fr; } .hero { padding: 32px; } }
+.notes-panel textarea { width: 100%; min-height: 150px; resize: vertical; margin-top: 16px; border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(0,0,0,.22); color: var(--text); }
+.notes-actions { display: flex; align-items: center; gap: 12px; margin-top: 14px; color: var(--muted); }
+.notes-actions button { border: 0; border-radius: 999px; padding: 10px 16px; background: var(--accent); color: #052014; font-weight: 800; cursor: pointer; }
