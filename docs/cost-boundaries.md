@@ -6,7 +6,7 @@ The MVP is free-tier first.
 
 - Existing Vercel-compatible frontend/runtime.
 - Free or low-friction public news feeds, including RSS/GDELT-like sources.
-- OpenDART API integration using user-provided environment credentials.
+- OpenDART API integration using user-provided server-side environment credentials.
 - Local or in-memory graph storage for tests and demos.
 - Free graph tiers only after explicit setup.
 
@@ -19,4 +19,4 @@ The MVP is free-tier first.
 
 ## Current graph storage decision
 
-`MemoryGraphStore` is the default initial graph store. It is deterministic and useful for tests, but it is non-durable. A Neo4j adapter is a later extension point, not an initial dependency.
+`MemoryGraphStore` is the default initial graph store. It is deterministic and useful for tests, but it is non-durable. A Neo4j adapter is a later extension point, not an initial dependency. The repository currently has a dependency guard test to prevent adding `neo4j-driver` before a free-tier graph adapter decision.

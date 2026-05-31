@@ -1,21 +1,33 @@
 # Architecture Notes
 
-EQR NLP is intentionally static-first for v0.
+EQR NLP is static-first for v0, with server-only seams for live ingestion later.
 
 ## Runtime shape
 
-- **Next.js App Router** renders the dashboard and event detail routes.
-- **Static sample events** represent low-friction public feeds until a live RSS/GDELT-style adapter is approved.
-- **`KoreaFinanceMcpAdapter`** isolates macro data lookup so live `korea-finance-mcp` transport can replace fixtures later.
-- **Deterministic scoring** keeps v0 reproducible and testable; benchmarked models are a follow-up.
+- **Next.js App Router** renders the dashboard, event detail, graph, backtest, and portfolio-simulation routes.
+- **Static sample events** represent low-friction public feeds until a live ingestion job is approved.
+- **Source adapters** isolate fixture, RSS, GDELT DOC API-style, and OpenDART disclosure inputs behind `SourceAdapter`.
+- **`KoreaFinanceMcpAdapter`** isolates macro data lookup so a live `korea-finance-mcp` transport can replace fixtures later.
+- **`GraphStore`** isolates KG persistence. `MemoryGraphStore` is deterministic and non-durable; a free-tier graph adapter can be added later without changing domain contracts.
+- **Backtest calibration** generates `BacktestRun` and `Weight` nodes with MAE, RMSE, and zero-safe sMAPE.
 - **Browser-local notes** use localStorage so the MVP does not require a database account.
+
+## Data flow
+
+```text
+SourceAdapter -> Document -> RuleBasedExtractor -> Event/Entity/Indicator hints
+             -> GraphStore -> provenance views
+             -> Backtest calibration -> Weight nodes
+             -> Forecast DTO -> Event, backtest, graph, portfolio simulation UI
+```
 
 ## Extension seams
 
 - Replace `FixtureKoreaFinanceMcpAdapter` with an HTTP/MCP client adapter.
-- Add a `NewsFeedAdapter` when live feed ingestion begins.
-- Add a scoring strategy interface before historical evaluation or model comparison.
-- Add hosted persistence only after the service choice is approved.
+- Run RSS/GDELT/OpenDART adapters from server-only jobs or bounded admin actions.
+- Add a durable `GraphStore` adapter after a free-tier service is selected.
+- Add a scoring strategy interface before model comparison or LLM extraction.
+- Replace fixture historical windows with real event/indicator backfills.
 
 ## Public repo boundary
 
