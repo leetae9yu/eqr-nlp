@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "createdAt": "2026-05-31T05:56:05.172Z",
+  "updatedAt": "2026-05-31T05:56:05.172Z",
+  "briefPath": ".omx/ultragoal/brief.md",
+  "goalsPath": ".omx/ultragoal/goals.json",
+  "ledgerPath": ".omx/ultragoal/ledger.jsonl",
+  "codexGoalMode": "aggregate",
+  "goals": [
+    {
+      "id": "G001-scaffold-vercel-ready-app",
+      "title": "Scaffold Vercel-ready app",
+      "objective": "Create a Next.js TypeScript project with scripts, lint/test/build tooling, gitignore, and README placeholders.",
+      "status": "pending",
+      "attempt": 0,
+      "createdAt": "2026-05-31T05:56:05.172Z",
+      "updatedAt": "2026-05-31T05:56:05.172Z"
+    },
+    {
+      "id": "G002-build-deterministic-forecast-domain",
+      "title": "Build deterministic forecast domain",
+      "objective": "Implement typed macro basket, sample news events, korea-finance-mcp adapter boundary, deterministic scoring, evidence, uncertainty, time-series data, and unit tests.",
+      "status": "pending",
+      "attempt": 0,
+      "createdAt": "2026-05-31T05:56:05.172Z",
+      "updatedAt": "2026-05-31T05:56:05.172Z"
+    },
+    {
+      "id": "G003-build-analyst-dashboard",
+      "title": "Build analyst dashboard",
+      "objective": "Implement event feed, event detail pages, impact cards, multi-horizon forecasts, evidence panels, uncertainty display, and charts.",
+      "status": "pending",
+      "attempt": 0,
+      "createdAt": "2026-05-31T05:56:05.172Z",
+      "updatedAt": "2026-05-31T05:56:05.172Z"
+    },
+    {
+      "id": "G004-add-analyst-notes-and-docs",
+      "title": "Add analyst notes and docs",
+      "objective": "Implement localStorage analyst notes and write English README plus linked README_ko with setup, scope, limitations, and public repo guidance.",
+      "status": "pending",
+      "attempt": 0,
+      "createdAt": "2026-05-31T05:56:05.172Z",
+      "updatedAt": "2026-05-31T05:56:05.172Z"
+    },
+    {
+      "id": "G005-verify-and-publish",
+      "title": "Verify and publish",
+      "objective": "Run tests/lint/build, perform cleanup/review gate, commit final state, create public GitHub repo eqr-nlp, and push main.",
+      "status": "pending",
+      "attempt": 0,
+      "createdAt": "2026-05-31T05:56:05.172Z",
+      "updatedAt": "2026-05-31T05:56:05.172Z"
+    }
+  ],
+  "codexObjective": "Complete the durable ultragoal plan in .omx/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .omx/ultragoal/ledger.jsonl as the audit trail."
+}
