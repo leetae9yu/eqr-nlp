@@ -1,4 +1,5 @@
 import type { ForecastHorizon, MacroIndicatorId } from "../types";
+import type { EventKind } from "./graph-types";
 
 export type MagnitudeMetricSummary = {
   mae: number;
@@ -9,6 +10,7 @@ export type MagnitudeMetricSummary = {
 
 export type BacktestExample = {
   eventId: string;
+  eventKind: EventKind;
   indicatorId: MacroIndicatorId;
   horizon: ForecastHorizon;
   predictedDelta: number;
