@@ -45,7 +45,24 @@ describe("source adapters", () => {
     const result = await new OpenDartAdapter(undefined).fetchDocuments({ limit: 1 });
 
     expect(result.availability.ok).toBe(false);
-    expect(result.warnings.join(" ")).toContain("OPENDART_API_KEY");
+    expect(result.warnings.join(" ")).toContain("DART_API_KEY");
+  });
+
+  it("uses DART_API_KEY from server env and avoids fetch caching", async () => {
+    const previous = process.env.DART_API_KEY;
+    process.env.DART_API_KEY = "test-dart-key";
+    const fetcher = vi.fn(() => response({ status: "000", list: [{ rcept_no: "202606010001", report_nm: "Major report", corp_name: "Demo Corp", corp_code: "001", stock_code: "005930", rcept_dt: "20260601", flr_nm: "Demo" }] }));
+
+    try {
+      const result = await new OpenDartAdapter(undefined, fetcher).fetchDocuments({ limit: 1 });
+
+      expect(result.availability.ok).toBe(true);
+      expect(result.documents[0].title).toContain("Demo Corp");
+      expect(fetcher).toHaveBeenCalledWith(expect.any(URL), { cache: "no-store" });
+    } finally {
+      if (previous === undefined) delete process.env.DART_API_KEY;
+      else process.env.DART_API_KEY = previous;
+    }
   });
 
   it("ingests fixture documents into the graph without network", async () => {

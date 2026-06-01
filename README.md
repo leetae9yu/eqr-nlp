@@ -23,7 +23,8 @@ EQR NLP is a Vercel-ready research demo for Korean macro-impact forecasting from
 
 - `/` — event queue and research boundaries.
 - `/events/[id]` — macro basket forecast with evidence, uncertainty, and calibration context.
-- `/graph` — fixture knowledge-graph provenance and source coverage.
+- `/graph` — live OpenDART KG provenance when `DART_API_KEY` is configured; fixture fallback otherwise.
+- `/dart` — server-rendered live OpenDART disclosure list and KG ingestion status.
 - `/backtests` — deterministic fixture calibration run and generated weights.
 - `/portfolio` — hypothetical scenario simulation only; no broker, order, personalized advice, recommendation, buy/sell signal, or target-price workflow.
 
@@ -53,7 +54,7 @@ npm run dev
 
 Open <http://localhost:3000>.
 
-Optional live credentials can be copied from `.env.example`, but the default demo does not require API keys.
+Set `DART_API_KEY` in Vercel to enable live OpenDART reads. Optional live credentials can be copied from `.env.example`; the default demo still runs without API keys.
 
 ## Verification
 
@@ -78,7 +79,7 @@ Local OMX planning artifacts are not tracked in the public repository. Public im
 
 ## Live integration follow-ups
 
-- Wire RSS/GDELT/OpenDART adapters to scheduled or manually triggered ingestion jobs.
+- Add durable scheduled ingestion for RSS/GDELT/OpenDART beyond the request-time live DART page.
 - Add an actual korea-finance-mcp client transport for live macro snapshots.
 - Add a free-tier graph database adapter behind `GraphStore` after setup is approved.
 - Replace fixture backtest windows with real historical event/indicator data.

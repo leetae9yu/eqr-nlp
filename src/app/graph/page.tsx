@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { Badge } from "@/components/Badge";
-import { getFixtureGraphStatus } from "@/lib/kg/graph-provenance";
+import { hasDartApiKey } from "@/lib/env";
+import { getGraphStatusFromSource } from "@/lib/kg/graph-provenance";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function GraphPage() {
-  const status = await getFixtureGraphStatus();
+  const sourceMode = hasDartApiKey() ? "dart-live" : "fixture";
+  const status = await getGraphStatusFromSource(sourceMode, 10);
   const countEntries = Object.entries(status.counts).filter(([, value]) => value > 0);
 
   return (
@@ -13,7 +18,7 @@ export default async function GraphPage() {
         <p className="eyebrow">Knowledge graph provenance</p>
         <h1>Trace source documents into macro indicator hypotheses.</h1>
         <p>
-          This view is generated from the free fixture feed through the server-only ingestion pipeline.
+          This view uses live OpenDART ingestion when DART_API_KEY is configured in the server environment; otherwise it falls back to fixtures.
           Storage is currently memory-only and non-durable until a free-tier graph database is configured.
         </p>
       </section>
@@ -24,6 +29,7 @@ export default async function GraphPage() {
           <h2>Node coverage</h2>
         </div>
         <div className="tag-row">
+          <Badge>{status.sourceMode}</Badge>
           <Badge>{status.storageMode}</Badge>
           <Badge>generated {new Date(status.generatedAt).toLocaleDateString("en")}</Badge>
           {countEntries.map(([kind, count]) => <Badge key={kind}>{kind}: {count}</Badge>)}

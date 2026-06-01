@@ -19,7 +19,7 @@ These values are deterministic demo data. The forecast UI labels them as fixture
 
 ## Source adapter fixtures
 
-`FixtureSourceAdapter` converts the sample event feed into `Document` nodes for KG ingestion. RSS, GDELT, and OpenDART adapters are implemented with mocked tests and server-only boundaries, but live network ingestion is not enabled by default.
+`FixtureSourceAdapter` converts the sample event feed into `Document` nodes for KG ingestion. RSS and GDELT adapters are implemented with mocked tests and server-only boundaries. OpenDART can perform request-time live reads on `/dart` and `/graph` when `DART_API_KEY` is configured, while the default credential-free demo remains fixture-backed.
 
 ## Backtest fixtures
 

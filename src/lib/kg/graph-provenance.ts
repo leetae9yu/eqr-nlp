@@ -1,13 +1,17 @@
 import { createRelationship, type DocumentNode, type KgNode, type SourceNode } from "../domain/graph-types";
 import { RuleBasedExtractor } from "../extraction/rule-based-extractor";
 import { ingestDocuments } from "../ingestion/ingest-documents";
+import { OpenDartAdapter } from "../sources/dart-adapter";
 import { FixtureSourceAdapter } from "../sources/fixture-source-adapter";
+import type { SourceAdapter } from "../sources/source-types";
 import { MACRO_BASKET, type MacroIndicatorId } from "../types";
 import type { GraphSnapshot, GraphStore } from "./graph-store";
 import { getIndicatorNode, getLatestObservationNode } from "./indicator-nodes";
 import { MemoryGraphStore } from "./memory-graph-store";
 
 export type GraphNodeCounts = Record<KgNode["kind"] | "portfolio-scenario", number>;
+
+export type GraphSourceMode = "fixture" | "dart-live";
 
 export type SourceCoverage = {
   source: SourceNode;
@@ -29,6 +33,7 @@ export type IndicatorProvenancePath = {
 
 export type GraphStatus = {
   generatedAt: string;
+  sourceMode: GraphSourceMode;
   storageMode: "memory-non-durable";
   counts: GraphNodeCounts;
   sourceCoverage: SourceCoverage[];
@@ -68,17 +73,25 @@ export async function seedIndicatorLayer(graphStore: GraphStore): Promise<void> 
   }
 }
 
-export async function buildFixtureKnowledgeGraph(limit = 3): Promise<{ graphStore: MemoryGraphStore; warnings: string[] }> {
+export async function buildKnowledgeGraphFromSource(adapter: SourceAdapter, limit = 10): Promise<{ graphStore: MemoryGraphStore; warnings: string[] }> {
   const graphStore = new MemoryGraphStore();
   await seedIndicatorLayer(graphStore);
   const summary = await ingestDocuments({
-    adapter: new FixtureSourceAdapter(),
+    adapter,
     graphStore,
     extractor: new RuleBasedExtractor(),
     limit,
   });
 
   return { graphStore, warnings: summary.warnings };
+}
+
+export async function buildFixtureKnowledgeGraph(limit = 3): Promise<{ graphStore: MemoryGraphStore; warnings: string[] }> {
+  return buildKnowledgeGraphFromSource(new FixtureSourceAdapter(), limit);
+}
+
+export async function buildDartKnowledgeGraph(limit = 10): Promise<{ graphStore: MemoryGraphStore; warnings: string[] }> {
+  return buildKnowledgeGraphFromSource(new OpenDartAdapter(), limit);
 }
 
 function findNode<T extends KgNode["kind"]>(snapshot: GraphSnapshot, id: string, kind: T): Extract<KgNode, { kind: T }> | undefined {
@@ -149,15 +162,26 @@ export function getDocumentCitation(snapshot: GraphSnapshot, documentId: string)
   return document?.citation;
 }
 
-export async function getFixtureGraphStatus(): Promise<GraphStatus> {
-  const { graphStore, warnings } = await buildFixtureKnowledgeGraph();
+export async function getGraphStatusFromSource(sourceMode: GraphSourceMode = "fixture", limit = 10): Promise<GraphStatus> {
+  const { graphStore, warnings } = sourceMode === "dart-live"
+    ? await buildDartKnowledgeGraph(limit)
+    : await buildFixtureKnowledgeGraph(Math.min(limit, 3));
   const snapshot = await graphStore.exportSnapshot();
   return {
-    generatedAt: "2026-05-31T00:00:00.000Z",
+    generatedAt: new Date().toISOString(),
+    sourceMode,
     storageMode: "memory-non-durable",
     counts: countGraphNodes(snapshot),
     sourceCoverage: buildSourceCoverage(snapshot, warnings),
     indicatorPaths: buildIndicatorProvenancePaths(snapshot),
     warnings,
   };
+}
+
+export async function getFixtureGraphStatus(): Promise<GraphStatus> {
+  return getGraphStatusFromSource("fixture", 3);
+}
+
+export async function getDartGraphStatus(limit = 10): Promise<GraphStatus> {
+  return getGraphStatusFromSource("dart-live", limit);
 }
