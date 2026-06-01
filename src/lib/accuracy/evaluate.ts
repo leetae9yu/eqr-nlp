@@ -3,7 +3,7 @@ import { loadFrankfurterUsdKrwHistory } from "../history/frankfurter-history";
 import type { HistoryLoadResult } from "../history/types";
 import { createAccuracyStore, type AccuracyStore, type SourceRunRecord } from "../storage";
 import { MACRO_BASKET, type Direction, type MacroIndicatorId } from "../types";
-import { actualValuesAfterFirst, directionsFromSeries, previousValueForecasts, type DatedValue } from "./baselines";
+import { directionsFromSeries, type DatedValue } from "./baselines";
 import { ACCURACY_THRESHOLD_VERSION, getIndicatorThreshold } from "./thresholds";
 import { directionalAccuracy, directionFromDelta, improvementPct, mae, smape } from "./metrics";
 import { buildBasketScorecard, buildIndicatorScorecard } from "./scorecard";

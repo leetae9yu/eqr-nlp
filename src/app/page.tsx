@@ -14,6 +14,7 @@ export default function HomePage() {
         </p>
         <div className="hero-actions">
           <Link className="primary-link" href="/dart/forecasts">DART 예측 결과 보기</Link>
+          <Link className="secondary-link" href="/accuracy">정확도 검증</Link>
           <Link className="secondary-link" href="/dart">DART 실시간 수집</Link>
           <Link className="secondary-link" href={`/events/${sampleEvents[0].id}`}>샘플 예측</Link>
           <Link className="secondary-link" href="/graph">지식그래프</Link>

@@ -44,7 +44,7 @@ export default async function DartForecastsPage({ searchParams }: { searchParams
 
   return (
     <main className="shell">
-      <Link className="back-link" href="/dart">← DART 수집 화면</Link>
+      <div className="page-link-row"><Link className="back-link" href="/dart">← DART 수집 화면</Link><Link className="secondary-link" href="/accuracy">정확도 검증 보기</Link></div>
       <section className="hero detail-hero">
         <p className="eyebrow">DART 기반 예측 결과</p>
         <h1>실시간 공시를 매크로 바스켓 예측으로 변환합니다.</h1>

@@ -9,6 +9,7 @@ EQR NLP는 저마찰 뉴스 이벤트, 공시, live-first 매크로 기준값을
 - 재현 가능한 샘플 데이터 기반 이벤트 피드
 - fixture, RSS, GDELT DOC API 스타일, OpenDART 공시 입력을 위한 server-only 소스 어댑터 계약
 - live-first 매크로 기준값 어댑터: USD/KRW는 키 없는 Frankfurter daily FX를 사용하고, 기준금리·국고채 3년·M2는 `BOK_ECOS_API_KEY` 또는 `ECOS_API_KEY`가 있으면 ECOS를 사용하며 없으면 명시적 샘플 fallback 표시
+- `/accuracy`에서 실제 이력 기반 예측을 naive baseline과 비교하고 PASS / FAIL / INSUFFICIENT_COVERAGE / PENDING 상태로 표시하는 beyond-MVP 정확도 점수표
 - Source, Document, Entity, Event, Indicator, Observation, Weight, BacktestRun, Forecast, PortfolioScenario 개념을 가진 메모리 기반 지식그래프
 - 다음 매크로 바스켓 카드:
   - USD/KRW
@@ -27,6 +28,7 @@ EQR NLP는 저마찰 뉴스 이벤트, 공시, live-first 매크로 기준값을
 - `/graph` — `DART_API_KEY`가 있으면 live OpenDART KG provenance, 없으면 fixture fallback
 - `/dart` — 서버 렌더링 live OpenDART 공시 목록, KG ingestion 상태, ontology promotion gate, pack export 링크
 - `/dart/forecasts` — live OpenDART 공시를 매크로 예측 결과 카드로 변환
+- `/accuracy` — 소스 커버리지, hard gate, Balanced target gap, 모델/지표/소스 버전, 비투자자문 문구를 포함한 한국어 정확도 점수표
 - `/backtests` — deterministic fixture 보정 run과 생성된 weight
 - `/portfolio` — 가상 시나리오 시뮬레이션 전용. 브로커, 주문, 개인화 자문, 추천, buy/sell signal, target price 워크플로는 없음
 
@@ -56,7 +58,7 @@ npm run dev
 
 브라우저에서 <http://localhost:3000>을 여세요.
 
-Vercel에는 `DART_API_KEY`를 설정하면 live OpenDART 조회가 켜집니다. USD/KRW는 키 없는 Frankfurter를 사용합니다. 기준금리·국고채 3년·M2는 `BOK_ECOS_API_KEY` 또는 `ECOS_API_KEY`를 설정하면 한국은행 ECOS 기준값으로 전환됩니다. 키가 없어도 build는 통과하지만 샘플 fallback을 명시합니다.
+Vercel에는 `DART_API_KEY`를 설정하면 live OpenDART 조회가 켜집니다. USD/KRW는 키 없는 Frankfurter를 사용합니다. 기준금리·국고채 3년·M2는 `BOK_ECOS_API_KEY` 또는 `ECOS_API_KEY`를 설정하면 한국은행 ECOS 기준값으로 전환됩니다. `DATABASE_URL`은 Neon/Vercel Marketplace Postgres에 연결해 운영 정확도 evidence를 저장할 때 사용합니다. 없으면 `/accuracy`는 명시적 비프로덕션 인메모리 저장소를 사용합니다. `CRON_SECRET`은 Vercel Cron이 `/api/accuracy/ingest`를 호출할 때 보호용으로 사용합니다. 키가 없어도 build는 통과하지만 fallback/coverage gap을 명시합니다.
 
 ## 검증
 
@@ -72,13 +74,15 @@ npm run build
 - [Fixture provenance](./docs/fixture-provenance.md)
 - [Knowledge graph schema](./docs/knowledge-graph-schema.md)
 - [Backtesting and weight calibration](./docs/backtesting.md)
+- [Beyond-MVP accuracy release plan](./docs/beyond-mvp-accuracy-plan.md)
+- [Beyond-MVP accuracy test spec](./docs/beyond-mvp-accuracy-test-spec.md)
 - [Cost boundaries](./docs/cost-boundaries.md)
 - [Portfolio simulation boundary](./docs/portfolio-simulation-boundary.md)
 - [OpenCrab-inspired ontology factory](./docs/opencrab-inspired-ontology.md)
 
 ## 후속 live 연동 후보
 
-- request-time live DART 페이지를 넘어 RSS/GDELT/OpenDART durable scheduled ingestion 추가
+- 현재 accuracy history cron을 넘어 RSS/GDELT/OpenDART durable scheduled ingestion 확장
 - direct live macro adapter를 korea-finance-mcp transport로 교체/확장
 - setup 승인 후 `GraphStore` 뒤에 free-tier graph database adapter 추가
 - fixture 백테스트 window를 실제 과거 이벤트/지표 데이터로 교체

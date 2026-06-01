@@ -21,6 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </Link>
               <div className="nav-links" aria-label="주요 화면">
                 <Link href="/dart/forecasts">예측</Link>
+                <Link href="/accuracy">검증</Link>
                 <Link href="/dart">DART</Link>
                 <Link href="/graph">그래프</Link>
                 <Link href="/backtests">백테스트</Link>
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <div className="sub-nav-links">
                 <Link href="/dart">공시 수집</Link>
                 <Link href="/graph">온톨로지</Link>
+                <Link href="/accuracy">정확도 검증</Link>
                 <Link className="primary-link" href="/dart/forecasts">결과 보기</Link>
               </div>
             </div>
@@ -49,6 +51,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </div>
             <div className="footer-links">
               <Link href="/dart/forecasts">예측 결과</Link>
+              <Link href="/accuracy">정확도 검증</Link>
               <Link href="/dart">DART 수집</Link>
               <Link href="/graph">지식그래프</Link>
             </div>
