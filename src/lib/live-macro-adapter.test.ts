@@ -36,10 +36,13 @@ describe("live macro adapter", () => {
 
   it("loads ECOS-backed Korea treasury yield when a BOK key is configured", async () => {
     vi.stubEnv("BOK_ECOS_API_KEY", "test-ecos-key");
-    const fetcher = vi.fn(() => jsonResponse({ StatisticSearch: { row: [
-      { TIME: "20260528", DATA_VALUE: "3.10" },
-      { TIME: "20260529", DATA_VALUE: "3.12" },
-    ] } }));
+    const fetcher = vi.fn((input: string | URL) => {
+      void input;
+      return jsonResponse({ StatisticSearch: { row: [
+        { TIME: "20260528", DATA_VALUE: "3.10" },
+        { TIME: "20260529", DATA_VALUE: "3.12" },
+      ] } });
+    });
 
     const snapshot = await new LiveKoreaFinanceMcpAdapter(fetcher).getMacroSnapshot("treasury-yield");
 
