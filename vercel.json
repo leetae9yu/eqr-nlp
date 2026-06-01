@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/accuracy/ingest",
+      "schedule": "15 21 * * *"
+    }
+  ]
+}
