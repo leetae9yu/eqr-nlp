@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ingestAndEvaluateAccuracy } from "../../../../lib/accuracy/evaluate";
+import type { HistoryLoadResult } from "../../../../lib/history/types";
 
 function isUnsafeMutationEnvironment() {
   return Boolean(process.env.DATABASE_URL || process.env.VERCEL || process.env.NODE_ENV === "production");
@@ -17,6 +18,19 @@ function authorizationState(request: Request) {
     : { ok: false, status: 401, error: "unauthorized" };
 }
 
+function summarizeHistory(history: HistoryLoadResult) {
+  return {
+    ok: history.ok,
+    indicatorId: history.indicatorId,
+    sourceId: history.sourceId,
+    sourceVersion: history.sourceVersion,
+    windowStart: history.windowStart,
+    windowEnd: history.windowEnd,
+    observationCount: history.observationCount,
+    warnings: history.warnings,
+  };
+}
+
 export async function GET(request: Request) {
   const auth = authorizationState(request);
   if (!auth.ok) {
@@ -24,5 +38,13 @@ export async function GET(request: Request) {
   }
 
   const result = await ingestAndEvaluateAccuracy();
-  return NextResponse.json({ ok: true, ...result }, { headers: { "Cache-Control": "no-store" } });
+  return NextResponse.json({
+    ok: true,
+    storeStatus: result.storeStatus,
+    histories: result.histories.map(summarizeHistory),
+    observationsStored: result.observationsStored,
+    warnings: result.warnings,
+    scorecard: result.scorecard,
+    evaluationMode: result.evaluationMode,
+  }, { headers: { "Cache-Control": "no-store" } });
 }

@@ -43,5 +43,7 @@ describe("accuracy ingest API", () => {
     expect(payload.ok).toBe(true);
     expect(payload.observationsStored).toBe(1);
     expect(payload.evaluationMode).toBe("persist-walk-forward-backtest");
+    expect(payload.histories[0]).toMatchObject({ indicatorId: "usd-krw", observationCount: 1 });
+    expect(payload.histories[0].observations).toBeUndefined();
   });
 });
