@@ -99,7 +99,7 @@ function ecosConfig(indicator: Exclude<MacroIndicatorId, "usd-krw">): EcosIndica
       source: "한국은행 ECOS 국고채 3년",
     },
     "m2-liquidity": {
-      statCode: process.env.EQR_ECOS_M2_STAT_CODE || "101Y004",
+      statCode: process.env.EQR_ECOS_M2_STAT_CODE || "161Y006",
       cycle: "M",
       itemCode: process.env.EQR_ECOS_M2_ITEM_CODE || "BBHA00",
       label: "M2 유동성",
