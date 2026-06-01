@@ -16,6 +16,7 @@ EQR NLP is a Vercel-ready research demo for Korean macro-impact forecasting from
   - Korea treasury yield
   - M2 / liquidity
 - 1D, 1W, and 1M horizon views for each basket item.
+- OpenCrab-inspired evidence → claim → promotion lifecycle for DART ontology construction.
 - Backtest-calibrated weight context with MAE, RMSE, and zero-safe sMAPE.
 - Source-linked evidence, KG path hints, uncertainty flags, mini time-series charts, browser-local analyst notes, and hypothetical portfolio simulation.
 
@@ -24,7 +25,7 @@ EQR NLP is a Vercel-ready research demo for Korean macro-impact forecasting from
 - `/` — event queue and research boundaries.
 - `/events/[id]` — macro basket forecast with evidence, uncertainty, and calibration context.
 - `/graph` — live OpenDART KG provenance when `DART_API_KEY` is configured; fixture fallback otherwise.
-- `/dart` — server-rendered live OpenDART disclosure list and KG ingestion status.
+- `/dart` — server-rendered live OpenDART disclosure list, KG ingestion status, ontology promotion gates, and pack export links.
 - `/backtests` — deterministic fixture calibration run and generated weights.
 - `/portfolio` — hypothetical scenario simulation only; no broker, order, personalized advice, recommendation, buy/sell signal, or target-price workflow.
 
@@ -72,6 +73,7 @@ npm run build
 - [Backtesting and weight calibration](./docs/backtesting.md)
 - [Cost boundaries](./docs/cost-boundaries.md)
 - [Portfolio simulation boundary](./docs/portfolio-simulation-boundary.md)
+- [OpenCrab-inspired ontology factory](./docs/opencrab-inspired-ontology.md)
 
 ## Project artifacts
 

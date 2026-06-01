@@ -14,30 +14,20 @@ export async function GET(request: Request) {
     endDate: searchParams.get("endDate") ?? undefined,
     limit: Number(searchParams.get("limit") ?? 20),
   });
+  const pack = await buildOntologyPromotionPackage(result.documents, "eqr-dart-live-request-pack");
 
-  const ontologyPack = await buildOntologyPromotionPackage(result.documents, "eqr-dart-live-request-pack");
+  if (searchParams.get("format") === "jsonl") {
+    return new Response(pack.graph.nodesJsonl, {
+      headers: {
+        "content-type": "application/x-ndjson; charset=utf-8",
+        "content-disposition": "attachment; filename=eqr-dart-ontology-nodes.jsonl",
+      },
+    });
+  }
 
   return NextResponse.json({
-    source: result.source,
     availability: result.availability,
-    documents: result.documents.map((document) => ({
-      id: document.id,
-      sourceId: document.sourceId,
-      externalId: document.externalId,
-      title: document.title,
-      url: document.url,
-      publishedAt: document.publishedAt,
-      retrievedAt: document.retrievedAt,
-      language: document.language,
-      summary: document.summary,
-      contentHash: document.contentHash,
-      citation: document.citation,
-    })),
-    ontology: {
-      manifest: ontologyPack.manifest,
-      promotions: ontologyPack.promotions,
-      qualityReport: ontologyPack.qualityReport,
-    },
     warnings: result.warnings,
+    ...pack,
   });
 }
