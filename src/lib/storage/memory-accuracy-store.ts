@@ -8,7 +8,7 @@ export class InMemoryAccuracyStore implements AccuracyStore {
   private targets = new Map<string, IssuedForecastTarget>();
   private matches = new Map<string, MatchedForecastObservation>();
   private evaluationRuns = new Map<string, EvaluationRun>();
-  private metricResults: MetricResult[] = [];
+  private metricResults = new Map<string, MetricResult>();
 
   status(): AccuracyStoreStatus {
     return {
@@ -62,10 +62,16 @@ export class InMemoryAccuracyStore implements AccuracyStore {
   }
 
   async recordMetricResults(results: MetricResult[]) {
-    this.metricResults.push(...results.map((result) => structuredClone(result)));
+    for (const result of results) {
+      this.metricResults.set(metricResultKey(result), structuredClone(result));
+    }
   }
 
   async listMetricResults() {
-    return this.metricResults.map((result) => structuredClone(result));
+    return [...this.metricResults.values()].map((result) => structuredClone(result));
   }
+}
+
+function metricResultKey(result: MetricResult) {
+  return `${result.evaluationRunId}|${result.indicatorId}|${result.horizon ?? ""}|${result.metric}`;
 }

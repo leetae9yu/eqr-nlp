@@ -12,6 +12,8 @@ import type { AccuracyMetricSet, BasketScorecard, IssuedForecastTarget, MatchedF
 export const ACCURACY_MODEL_VERSION = "walk-forward-momentum-v1";
 export const ACCURACY_SOURCE_VERSION = "free-history-loaders-v1";
 
+export type AccuracyEvaluationMode = "read-only" | "persist-walk-forward-backtest";
+
 type FetchLike = (input: string | URL, init?: RequestInit) => Promise<Response>;
 
 type BuildOptions = {
@@ -49,6 +51,10 @@ function actualValuesForModelWindow(series: DatedValue[]) {
 
 function directionsFromForecasts(forecasts: number[], baselines: number[]): Direction[] {
   return forecasts.map((forecast, index) => directionFromDelta(forecast - baselines[index]));
+}
+
+function directionHit(predicted: Direction, observed: Direction) {
+  return predicted === observed || predicted === "mixed";
 }
 
 function historyToMetrics(indicatorId: MacroIndicatorId, observations: SourceObservation[]): AccuracyMetricSet {
@@ -107,8 +113,10 @@ function buildLedgerRows(indicatorId: MacroIndicatorId, observations: SourceObse
     const predictedValue = modelForecasts[index];
     const baselineValue = baselineForecasts[index];
     const observedValue = actuals[index];
+    const predictedDirection = directionFromDelta(predictedValue - baselineValue);
+    const observedDirection = directionFromDelta(observedValue - baselineValue);
     const target: IssuedForecastTarget = {
-      forecastId: `forecast:${indicatorId}:walk-forward:${targetPoint.date}`,
+      forecastId: `forecast:${indicatorId}:walk-forward-backtest:${targetPoint.date}`,
       issuedAt: `${issuedPoint.date.length === 7 ? `${issuedPoint.date}-01` : issuedPoint.date}T00:00:00.000Z`,
       sourceRunId,
       indicatorId,
@@ -117,9 +125,9 @@ function buildLedgerRows(indicatorId: MacroIndicatorId, observations: SourceObse
       baselineValue,
       predictedValue,
       predictedDelta: predictedValue - baselineValue,
-      predictedDirection: directionFromDelta(predictedValue - baselineValue),
+      predictedDirection,
       confidence: 0.5,
-      modelVersion: ACCURACY_MODEL_VERSION,
+      modelVersion: `${ACCURACY_MODEL_VERSION}:walk-forward-backtest`,
       metricVersion: ACCURACY_THRESHOLD_VERSION,
       sourceVersion: observations[index + 2]?.sourceVersion ?? ACCURACY_SOURCE_VERSION,
     };
@@ -128,8 +136,8 @@ function buildLedgerRows(indicatorId: MacroIndicatorId, observations: SourceObse
       ...target,
       matchedObservationId: observations[index + 2]?.observationId,
       observedValue,
-      observedDirection: directionFromDelta(observedValue - baselineValue),
-      evaluationState: "PASS",
+      observedDirection,
+      evaluationState: directionHit(predictedDirection, observedDirection) ? "PASS" : "FAIL",
       evaluatedAt: isoNow(now),
     });
   }
@@ -152,13 +160,12 @@ function sourceRunFromHistory(result: HistoryLoadResult, now: Date): SourceRunRe
 export async function loadAllFreeHistories(options: BuildOptions = {}): Promise<HistoryLoadResult[]> {
   const fetcher = options.fetcher ?? fetch;
   const historyLimit = options.historyLimit ?? 1000;
-  const results: HistoryLoadResult[] = [
+  return [
     await loadFrankfurterUsdKrwHistory(fetcher, { limit: historyLimit }),
     await loadEcosIndicatorHistory("treasury-yield", fetcher, { limit: historyLimit }),
     await loadEcosIndicatorHistory("base-rate-expectation", fetcher, { limit: historyLimit }),
     await loadEcosIndicatorHistory("m2-liquidity", fetcher, { limit: historyLimit }),
   ];
-  return results;
 }
 
 export async function ingestAccuracyHistories(options: BuildOptions = {}) {
@@ -180,40 +187,45 @@ export async function ingestAccuracyHistories(options: BuildOptions = {}) {
   };
 }
 
-export async function buildAccuracyScorecard(options: BuildOptions = {}): Promise<BasketScorecard> {
-  const now = options.now ?? new Date();
-  const store = options.store ?? createAccuracyStore();
-  const ingestion = await ingestAccuracyHistories({ ...options, store, now });
+
+function scorecardFromHistories(histories: HistoryLoadResult[], store: AccuracyStore, now: Date): BasketScorecard {
+  const indicators = MACRO_BASKET.map((indicatorId) => {
+    const history = histories.find((item) => item.indicatorId === indicatorId);
+    const observations = history?.observations ?? [];
+    const config = getIndicatorThreshold(indicatorId);
+    return buildIndicatorScorecard({
+      indicatorId,
+      metrics: historyToMetrics(indicatorId, observations),
+      coverage: {
+        observationCount: observations.length,
+        maturedForecastCount: Math.max(0, observations.length - 2),
+        pendingForecastCount: 0,
+        windowStart: observations[0]?.observedAt,
+        windowEnd: observations.at(-1)?.observedAt,
+        sourceIds: [...new Set(observations.map((observation) => observation.sourceId))],
+        warnings: history?.warnings ?? ["저장된 이력 또는 프리뷰 이력이 없습니다."],
+      },
+      modelVersion: `${ACCURACY_MODEL_VERSION}:nonpersistent-preview`,
+      metricVersion: ACCURACY_THRESHOLD_VERSION,
+      sourceVersion: observations[0]?.sourceVersion ?? config.sourceLabel,
+    });
+  });
+  const scorecard = buildBasketScorecard(indicators, isoNow(now));
+  return {
+    ...scorecard,
+    warnings: [...scorecard.warnings, ...store.status().warnings, "비프로덕션 프리뷰: 공개 read path는 ledger를 쓰지 않습니다."],
+  };
+}
+
+async function scorecardFromStore(store: AccuracyStore, now: Date): Promise<BasketScorecard> {
+  const sourceRuns = await store.listSourceRuns();
   const indicators = [];
 
   for (const indicatorId of MACRO_BASKET) {
     const observations = await store.listObservations(indicatorId);
     const config = getIndicatorThreshold(indicatorId);
-    const sourceRun = (await store.listSourceRuns()).find((run) => run.sourceId === observations[0]?.sourceId);
-    const sourceRunId = sourceRun?.sourceRunId ?? `source-run:missing:${indicatorId}:${isoNow(now)}`;
-    const { targets, matches } = buildLedgerRows(indicatorId, observations, now, sourceRunId);
-    if (targets.length) {
-      await store.issueForecastTargets(targets);
-      await store.recordMatchedObservations(matches);
-    }
+    const matchingRuns = sourceRuns.filter((run) => observations.some((observation) => observation.sourceId === run.sourceId));
     const metrics = historyToMetrics(indicatorId, observations);
-    const metricResults = Object.entries(metrics).map(([metric, value]) => ({
-      evaluationRunId: `eval:${indicatorId}:${isoNow(now)}`,
-      indicatorId,
-      metric: metric as MetricResult["metric"],
-      value,
-      sampleSize: Math.max(0, observations.length - 2),
-    }));
-    await store.recordEvaluationRun({
-      evaluationRunId: `eval:${indicatorId}:${isoNow(now)}`,
-      runAt: isoNow(now),
-      metricVersion: ACCURACY_THRESHOLD_VERSION,
-      modelVersion: ACCURACY_MODEL_VERSION,
-      sourceRunIds: sourceRun ? [sourceRun.sourceRunId] : [],
-      windowStart: observations[0]?.observedAt,
-      windowEnd: observations.at(-1)?.observedAt,
-    });
-    await store.recordMetricResults(metricResults);
     indicators.push(buildIndicatorScorecard({
       indicatorId,
       metrics,
@@ -224,7 +236,7 @@ export async function buildAccuracyScorecard(options: BuildOptions = {}): Promis
         windowStart: observations[0]?.observedAt,
         windowEnd: observations.at(-1)?.observedAt,
         sourceIds: [...new Set(observations.map((observation) => observation.sourceId))],
-        warnings: ingestion.histories.find((history) => history.indicatorId === indicatorId)?.warnings ?? [],
+        warnings: observations.length ? matchingRuns.flatMap((run) => run.warnings) : sourceRuns.filter((run) => run.sourceId.includes(indicatorId) || run.sourceId.includes(config.sourceLabel)).flatMap((run) => run.warnings),
       },
       modelVersion: ACCURACY_MODEL_VERSION,
       metricVersion: ACCURACY_THRESHOLD_VERSION,
@@ -236,5 +248,58 @@ export async function buildAccuracyScorecard(options: BuildOptions = {}): Promis
   return {
     ...scorecard,
     warnings: [...scorecard.warnings, ...store.status().warnings],
+  };
+}
+
+export async function buildAccuracyScorecard(options: BuildOptions = {}): Promise<BasketScorecard> {
+  const now = options.now ?? new Date();
+  const explicitStore = Boolean(options.store);
+  const store = options.store ?? createAccuracyStore();
+  if (!explicitStore && store.status().mode === "memory-non-production") {
+    const histories = await loadAllFreeHistories(options);
+    return scorecardFromHistories(histories, store, now);
+  }
+  return scorecardFromStore(store, now);
+}
+
+export async function ingestAndEvaluateAccuracy(options: BuildOptions = {}) {
+  const now = options.now ?? new Date();
+  const store = options.store ?? createAccuracyStore();
+  const ingestion = await ingestAccuracyHistories({ ...options, store, now });
+
+  for (const indicatorId of MACRO_BASKET) {
+    const observations = await store.listObservations(indicatorId);
+    const sourceRun = (await store.listSourceRuns()).find((run) => observations.some((observation) => observation.sourceId === run.sourceId));
+    const sourceRunId = sourceRun?.sourceRunId ?? `source-run:missing:${indicatorId}:${isoNow(now)}`;
+    const { targets, matches } = buildLedgerRows(indicatorId, observations, now, sourceRunId);
+    if (targets.length) {
+      await store.issueForecastTargets(targets);
+      await store.recordMatchedObservations(matches);
+    }
+    const metrics = historyToMetrics(indicatorId, observations);
+    const evaluationRunId = `eval:${indicatorId}:walk-forward-backtest:${observations[0]?.observedAt ?? "none"}:${observations.at(-1)?.observedAt ?? "none"}`;
+    const metricResults = Object.entries(metrics).map(([metric, value]) => ({
+      evaluationRunId,
+      indicatorId,
+      metric: metric as MetricResult["metric"],
+      value,
+      sampleSize: Math.max(0, observations.length - 2),
+    }));
+    await store.recordEvaluationRun({
+      evaluationRunId,
+      runAt: isoNow(now),
+      metricVersion: ACCURACY_THRESHOLD_VERSION,
+      modelVersion: `${ACCURACY_MODEL_VERSION}:walk-forward-backtest`,
+      sourceRunIds: sourceRun ? [sourceRun.sourceRunId] : [],
+      windowStart: observations[0]?.observedAt,
+      windowEnd: observations.at(-1)?.observedAt,
+    });
+    await store.recordMetricResults(metricResults);
+  }
+
+  return {
+    ...ingestion,
+    scorecard: await scorecardFromStore(store, now),
+    evaluationMode: "persist-walk-forward-backtest" satisfies AccuracyEvaluationMode,
   };
 }

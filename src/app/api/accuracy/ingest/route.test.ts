@@ -19,6 +19,16 @@ describe("accuracy ingest API", () => {
     expect(response.status).toBe(401);
   });
 
+  it("fails closed when persistent storage is configured without CRON_SECRET", async () => {
+    vi.stubEnv("DATABASE_URL", "postgres://example");
+
+    const response = await GET(new Request("https://example.com/api/accuracy/ingest"));
+    const payload = await response.json();
+
+    expect(response.status).toBe(503);
+    expect(payload.error).toContain("CRON_SECRET");
+  });
+
   it("accepts Bearer CRON_SECRET and returns ingestion summary", async () => {
     vi.stubEnv("CRON_SECRET", "secret");
     vi.stubGlobal("fetch", vi.fn((input: string | URL) => {
@@ -32,5 +42,6 @@ describe("accuracy ingest API", () => {
     expect(response.status).toBe(200);
     expect(payload.ok).toBe(true);
     expect(payload.observationsStored).toBe(1);
+    expect(payload.evaluationMode).toBe("persist-walk-forward-backtest");
   });
 });

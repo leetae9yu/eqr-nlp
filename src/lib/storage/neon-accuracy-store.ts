@@ -11,7 +11,11 @@ export class NeonAccuracyStore implements AccuracyStore {
   }
 
   status(): AccuracyStoreStatus {
-    return { mode: "neon-postgres", productionEvidence: true, warnings: [] };
+    return {
+      mode: "neon-postgres",
+      productionEvidence: false,
+      warnings: ["Postgres persistence is enabled, but this scorecard is walk-forward backtest evidence until issued forecast targets mature."],
+    };
   }
 
   async recordSourceRun(run: SourceRunRecord) {
@@ -151,7 +155,11 @@ export class NeonAccuracyStore implements AccuracyStore {
     for (const result of results) {
       await this.sql`
         insert into accuracy_metric_results (evaluation_run_id, indicator_id, horizon, metric, value, baseline_value, sample_size)
-        values (${result.evaluationRunId}, ${result.indicatorId}, ${result.horizon ?? null}, ${result.metric}, ${result.value}, ${result.baselineValue ?? null}, ${result.sampleSize})
+        values (${result.evaluationRunId}, ${result.indicatorId}, ${result.horizon ?? ""}, ${result.metric}, ${result.value}, ${result.baselineValue ?? null}, ${result.sampleSize})
+        on conflict (evaluation_run_id, indicator_id, horizon, metric) do update set
+          value = excluded.value,
+          baseline_value = excluded.baseline_value,
+          sample_size = excluded.sample_size
       `;
     }
   }
@@ -161,7 +169,7 @@ export class NeonAccuracyStore implements AccuracyStore {
     return rows.map((row) => ({
       evaluationRunId: String(row.evaluation_run_id),
       indicatorId: row.indicator_id,
-      horizon: row.horizon ?? undefined,
+      horizon: row.horizon ? row.horizon : undefined,
       metric: row.metric,
       value: Number(row.value),
       baselineValue: row.baseline_value === null ? undefined : Number(row.baseline_value),

@@ -1,17 +1,28 @@
 import { NextResponse } from "next/server";
-import { ingestAccuracyHistories } from "../../../../lib/accuracy/evaluate";
+import { ingestAndEvaluateAccuracy } from "../../../../lib/accuracy/evaluate";
 
-function isAuthorized(request: Request) {
+function isUnsafeMutationEnvironment() {
+  return Boolean(process.env.DATABASE_URL || process.env.VERCEL || process.env.NODE_ENV === "production");
+}
+
+function authorizationState(request: Request) {
   const secret = process.env.CRON_SECRET;
-  if (!secret) return true;
-  return request.headers.get("authorization") === `Bearer ${secret}`;
+  if (!secret) {
+    return isUnsafeMutationEnvironment()
+      ? { ok: false, status: 503, error: "CRON_SECRET is required for protected ingestion in production or persistent-storage environments." }
+      : { ok: true };
+  }
+  return request.headers.get("authorization") === `Bearer ${secret}`
+    ? { ok: true }
+    : { ok: false, status: 401, error: "unauthorized" };
 }
 
 export async function GET(request: Request) {
-  if (!isAuthorized(request)) {
-    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401, headers: { "Cache-Control": "no-store" } });
+  const auth = authorizationState(request);
+  if (!auth.ok) {
+    return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status, headers: { "Cache-Control": "no-store" } });
   }
 
-  const result = await ingestAccuracyHistories();
+  const result = await ingestAndEvaluateAccuracy();
   return NextResponse.json({ ok: true, ...result }, { headers: { "Cache-Control": "no-store" } });
 }

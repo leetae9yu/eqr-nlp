@@ -67,9 +67,10 @@ create table if not exists accuracy_metric_results (
   id bigserial primary key,
   evaluation_run_id text not null references accuracy_evaluation_runs(evaluation_run_id),
   indicator_id text not null,
-  horizon text,
+  horizon text not null default '',
   metric text not null,
   value double precision not null,
   baseline_value double precision,
-  sample_size integer not null
+  sample_size integer not null,
+  unique (evaluation_run_id, indicator_id, horizon, metric)
 );
