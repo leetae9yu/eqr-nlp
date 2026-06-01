@@ -58,7 +58,7 @@ npm run dev
 
 브라우저에서 <http://localhost:3000>을 여세요.
 
-Vercel에는 `DART_API_KEY`를 설정하면 live OpenDART 조회가 켜집니다. USD/KRW는 키 없는 Frankfurter를 사용합니다. 기준금리·국고채 3년·M2는 `BOK_ECOS_API_KEY` 또는 `ECOS_API_KEY`를 설정하면 한국은행 ECOS 기준값으로 전환됩니다. `DATABASE_URL`은 Neon/Vercel Marketplace Postgres에 연결해 운영 정확도 evidence를 저장할 때 사용합니다. 없으면 `/accuracy`는 명시적 비프로덕션 인메모리 저장소를 사용합니다. `CRON_SECRET`은 Vercel Cron이 `/api/accuracy/ingest`를 호출할 때 보호용으로 사용합니다. 키가 없어도 build는 통과하지만 fallback/coverage gap을 명시합니다.
+Vercel에는 `DART_API_KEY`를 설정하면 live OpenDART 조회가 켜집니다. USD/KRW는 키 없는 Frankfurter를 사용합니다. 기준금리·국고채 3년·M2는 `BOK_ECOS_API_KEY` 또는 `ECOS_API_KEY`를 설정하면 한국은행 ECOS 기준값으로 전환됩니다. `DATABASE_URL`은 Neon/Vercel Marketplace Postgres에 연결해 walk-forward backtest/검증 ledger를 내구적으로 저장할 때 사용합니다. 만기된 실제 발행 예측이 충분히 쌓이기 전까지 운영 정확도 evidence로 간주하지 않습니다. 없으면 `/accuracy`는 명시적 비프로덕션 인메모리 프리뷰를 사용합니다. `CRON_SECRET`은 Vercel Cron이 `/api/accuracy/ingest`를 호출할 때 보호용으로 사용합니다. 키가 없어도 build는 통과하지만 fallback/coverage gap을 명시합니다.
 
 ## 검증
 

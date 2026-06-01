@@ -58,7 +58,7 @@ npm run dev
 
 Open <http://localhost:3000>.
 
-Set `DART_API_KEY` in Vercel to enable live OpenDART reads. USD/KRW uses Frankfurter without a key. Set `BOK_ECOS_API_KEY` or `ECOS_API_KEY` to enable official ECOS-backed base-rate, treasury-yield, and M2 baselines. Set `DATABASE_URL` to a Neon/Vercel Marketplace Postgres database for durable accuracy evidence; without it, `/accuracy` uses an explicit non-production in-memory store. Set `CRON_SECRET` to protect `/api/accuracy/ingest` when Vercel Cron runs. Optional credentials can be copied from `.env.example`; the app still builds without API keys but marks fallback/coverage gaps explicitly.
+Set `DART_API_KEY` in Vercel to enable live OpenDART reads. USD/KRW uses Frankfurter without a key. Set `BOK_ECOS_API_KEY` or `ECOS_API_KEY` to enable official ECOS-backed base-rate, treasury-yield, and M2 baselines. Set `DATABASE_URL` to a Neon/Vercel Marketplace Postgres database to durably store the walk-forward backtest/evaluation ledger; until enough real issued forecasts mature, this is not presented as production accuracy evidence. Without `DATABASE_URL`, `/accuracy` uses an explicit non-production in-memory preview. Set `CRON_SECRET` to protect `/api/accuracy/ingest` when Vercel Cron runs. Optional credentials can be copied from `.env.example`; the app still builds without API keys but marks fallback/coverage gaps explicitly.
 
 ## Verification
 
