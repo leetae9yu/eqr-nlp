@@ -725,7 +725,7 @@ summary {
 .signal-card strong {
   display: block;
   margin-top: 10px;
-  font-family: "SF Pro Display", system-ui, sans-serif;
+  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
   font-size: clamp(1.35rem, 2.7vw, 2.15rem);
   line-height: 1.12;
   letter-spacing: -0.04em;
@@ -735,6 +735,12 @@ summary {
   margin: 16px 0 0;
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.55;
+}
+
+.signal-card .badge {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .signal-strip {
@@ -776,7 +782,7 @@ summary {
   display: block;
   margin-top: 8px;
   color: var(--ink);
-  font-family: "SF Pro Display", system-ui, sans-serif;
+  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
   font-size: clamp(1.45rem, 2.5vw, 2.2rem);
   letter-spacing: -0.04em;
 }
