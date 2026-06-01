@@ -1,3 +1,4 @@
+import { LiveKoreaFinanceMcpAdapter } from "./live-macro-adapter";
 import { macroSnapshots } from "./macro-data";
 import type { MacroIndicatorId, MacroSnapshot } from "./types";
 
@@ -18,3 +19,5 @@ export const koreaFinanceMcpTools = [
   "get_dashboard",
   "get_market_index",
 ] as const;
+
+export { LiveKoreaFinanceMcpAdapter };

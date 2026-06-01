@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { sampleEvents } from "./events";
 import { analyzeEvent } from "./forecast";
+import { FixtureKoreaFinanceMcpAdapter } from "./mcp-adapter";
 import { HORIZONS, MACRO_BASKET } from "./types";
 import { productBoundaries } from "./product-copy";
 
+const fixtureAdapter = new FixtureKoreaFinanceMcpAdapter();
+
 describe("forecast domain", () => {
   it("returns every macro basket indicator with all horizons", async () => {
-    const analysis = await analyzeEvent(sampleEvents[0]);
+    const analysis = await analyzeEvent(sampleEvents[0], fixtureAdapter);
 
     expect(analysis.forecasts.map((forecast) => forecast.indicator)).toEqual([...MACRO_BASKET]);
     for (const forecast of analysis.forecasts) {
@@ -17,14 +20,14 @@ describe("forecast domain", () => {
   });
 
   it("is deterministic for a fixed event", async () => {
-    const first = await analyzeEvent(sampleEvents[1]);
-    const second = await analyzeEvent(sampleEvents[1]);
+    const first = await analyzeEvent(sampleEvents[1], fixtureAdapter);
+    const second = await analyzeEvent(sampleEvents[1], fixtureAdapter);
 
     expect(second).toEqual(first);
   });
 
   it("includes graph path and backtest calibration context when available", async () => {
-    const analysis = await analyzeEvent(sampleEvents[0]);
+    const analysis = await analyzeEvent(sampleEvents[0], fixtureAdapter);
     const calibratedHorizons = analysis.forecasts.flatMap((forecast) => forecast.forecasts.filter((horizon) => horizon.calibration));
 
     expect(analysis.forecasts.every((forecast) => forecast.graphEvidencePath?.relationshipTypes.includes("CALIBRATED"))).toBe(true);

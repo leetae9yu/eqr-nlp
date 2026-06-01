@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { sampleEvents } from "../events";
 import { analyzeEvent } from "../forecast";
+import { FixtureKoreaFinanceMcpAdapter } from "../mcp-adapter";
 import { portfolioSimulationDisclaimer } from "../domain/portfolio-types";
 import { assertSimulationOnlyCapabilities, portfolioRouteCapabilities, simulateHypotheticalPortfolio } from "./simulator";
 
 describe("portfolio simulation guardrails", () => {
   it("simulates a hypothetical basket without creating trading instructions", async () => {
-    const analysis = await analyzeEvent(sampleEvents[0]);
+    const analysis = await analyzeEvent(sampleEvents[0], new FixtureKoreaFinanceMcpAdapter());
     const scenario = simulateHypotheticalPortfolio(analysis);
 
     expect(scenario.kind).toBe("portfolio-scenario");

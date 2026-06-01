@@ -1,5 +1,5 @@
 import { calibrateBacktestWeights } from "./backtesting/calibrate-weights";
-import { FixtureKoreaFinanceMcpAdapter, type KoreaFinanceMcpAdapter } from "./mcp-adapter";
+import { LiveKoreaFinanceMcpAdapter, type KoreaFinanceMcpAdapter } from "./mcp-adapter";
 import { HORIZONS, MACRO_BASKET, type Direction, type EventAnalysis, type ForecastHorizon, type IndicatorForecast, type MacroIndicatorId, type MacroSnapshot, type NewsEvent } from "./types";
 
 const horizonMultipliers: Record<ForecastHorizon, number> = {
@@ -54,7 +54,7 @@ function rationaleFor(indicator: MacroIndicatorId, horizon: ForecastHorizon, dir
 
 export async function analyzeEvent(
   event: NewsEvent,
-  adapter: KoreaFinanceMcpAdapter = new FixtureKoreaFinanceMcpAdapter(),
+  adapter: KoreaFinanceMcpAdapter = new LiveKoreaFinanceMcpAdapter(),
 ): Promise<EventAnalysis> {
   const calibration = calibrateBacktestWeights();
   const eventKind = inferEventKind(event);
@@ -91,8 +91,8 @@ export async function analyzeEvent(
           {
             label: snapshot.label,
             source: snapshot.source,
-            url: "https://github.com/emceeKim/korea-finance-mcp",
-            quote: `${snapshot.label} 샘플 최신값은 ${snapshot.asOf} 기준 ${snapshot.latestValue} ${snapshot.unit}입니다.`,
+            url: snapshot.source.includes("Frankfurter") ? "https://frankfurter.app" : snapshot.source.includes("ECOS") ? "https://ecos.bok.or.kr" : "https://github.com/emceeKim/korea-finance-mcp",
+            quote: `${snapshot.label} 기준값은 ${snapshot.asOf} 기준 ${snapshot.latestValue} ${snapshot.unit}입니다. 출처: ${snapshot.source}.`,
           },
           ...calibrationEvidence,
         ],
@@ -102,7 +102,7 @@ export async function analyzeEvent(
           citations: event.evidence.map((item) => item.url),
         },
         uncertainty: [
-          "실시간 korea-finance-mcp 전송 계층이 연결되기 전까지 매크로 스냅샷은 fixture를 사용합니다.",
+          snapshot.source.includes("샘플 사용") ? `실시간 매크로 소스 실패로 ${snapshot.source} 기준값을 사용했습니다.` : `매크로 기준값은 ${snapshot.source}의 ${snapshot.asOf} 데이터를 사용합니다.`,
           "점수는 리서치 데모용 시나리오 보조 지표이며 투자 추천이 아닙니다.",
           "실제 과거 market-data backfill이 연결되기 전까지 백테스트 지표는 결정론적 fixture 이력을 사용합니다.",
         ],

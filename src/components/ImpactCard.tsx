@@ -23,7 +23,7 @@ export function ImpactCard({ forecast }: { forecast: IndicatorForecast }) {
           <strong>{forecast.impactScore > 0 ? "+" : ""}{forecast.impactScore.toFixed(1)}</strong>
         </div>
       </div>
-      <p className="muted">기준값: {forecast.baseline} {forecast.unit} · 신뢰도 {Math.round(forecast.confidence * 100)}% · 방향 {directionLabelKo(forecast.direction)}</p>
+      <p className="muted">기준값: {forecast.baseline} {forecast.unit} · 기준일 {forecast.series.at(-1)?.date ?? "미상"} · 출처 {forecast.evidence.find((item) => item.label === forecast.label)?.source ?? "미상"} · 신뢰도 {Math.round(forecast.confidence * 100)}% · 방향 {directionLabelKo(forecast.direction)}</p>
       <HorizonTable forecasts={forecast.forecasts} />
       <MiniChart series={forecast.series} label={forecast.label} />
       <details>

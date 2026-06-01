@@ -2,13 +2,13 @@
 
 [한국어 README](./README_ko.md)
 
-EQR NLP is a Vercel-ready research demo for Korean macro-impact forecasting from low-friction news events, disclosures, and fixture-backed macro data. It turns source documents into an explainable event-to-macro knowledge graph, calibrates relationship weights with magnitude-error backtests, and shows multi-horizon scenario forecasts for a fixed Korean macro basket.
+EQR NLP is a Vercel-ready research demo for Korean macro-impact forecasting from low-friction news events, disclosures, and live-first macro baselines. It turns source documents into an explainable event-to-macro knowledge graph, calibrates relationship weights with magnitude-error backtests, and shows multi-horizon scenario forecasts for a fixed Korean macro basket.
 
 ## What the demo shows
 
 - A low-friction event feed using reproducible sample data.
 - Server-only source adapter contracts for fixture, RSS, GDELT DOC API-style, and OpenDART disclosure inputs.
-- A korea-finance-mcp adapter boundary for future live ECOS/KRX/DART-style macro data access.
+- Live-first macro baseline adapter: USD/KRW uses no-key Frankfurter daily FX; ECOS-backed base rate, KTB 3Y, and M2 activate with `BOK_ECOS_API_KEY` or `ECOS_API_KEY`, with explicit sample fallback if unavailable.
 - A memory-backed knowledge graph with Source, Document, Entity, Event, Indicator, Observation, Weight, BacktestRun, Forecast, and PortfolioScenario concepts.
 - Macro-impact cards for:
   - USD/KRW
@@ -30,9 +30,9 @@ EQR NLP is a Vercel-ready research demo for Korean macro-impact forecasting from
 - `/backtests` — deterministic fixture calibration run and generated weights.
 - `/portfolio` — hypothetical scenario simulation only; no broker, order, personalized advice, recommendation, buy/sell signal, or target-price workflow.
 
-## Why local fixtures first?
+## Why explicit fallback remains
 
-The approved MVP prioritizes a working product demo over benchmark accuracy or signup-heavy infrastructure. The app is designed so public feeds, OpenDART, and live korea-finance-mcp transports can replace sample adapters later without rewriting the dashboard contracts.
+The approved MVP prioritizes a working product demo over benchmark accuracy or signup-heavy infrastructure. The app now uses live DART and live-first macro baselines where no-key or configured official APIs are available, while preserving explicit sample fallback for missing credentials.
 
 ## Boundaries
 
@@ -44,7 +44,7 @@ This is a research demo. It does not provide order execution, broker integration
 - TypeScript
 - Vitest
 - ESLint
-- Local fixture adapters for a zero-service MVP
+- Live-first adapters with explicit sample fallback for missing credentials
 - `MemoryGraphStore` for non-durable KG demos and tests
 
 ## Getting started
@@ -56,7 +56,7 @@ npm run dev
 
 Open <http://localhost:3000>.
 
-Set `DART_API_KEY` in Vercel to enable live OpenDART reads. Optional live credentials can be copied from `.env.example`; the default demo still runs without API keys.
+Set `DART_API_KEY` in Vercel to enable live OpenDART reads. USD/KRW uses Frankfurter without a key. Set `BOK_ECOS_API_KEY` or `ECOS_API_KEY` to enable official ECOS-backed base-rate, treasury-yield, and M2 baselines. Optional credentials can be copied from `.env.example`; the app still builds without API keys but marks sample fallback explicitly.
 
 ## Verification
 
@@ -83,6 +83,6 @@ Local OMX planning artifacts are not tracked in the public repository. Public im
 ## Live integration follow-ups
 
 - Add durable scheduled ingestion for RSS/GDELT/OpenDART beyond the request-time live DART page.
-- Add an actual korea-finance-mcp client transport for live macro snapshots.
+- Replace/extend the direct live macro adapter with a korea-finance-mcp transport when its runtime contract is finalized.
 - Add a free-tier graph database adapter behind `GraphStore` after setup is approved.
 - Replace fixture backtest windows with real historical event/indicator data.
