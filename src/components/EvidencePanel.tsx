@@ -8,8 +8,8 @@ export function EvidencePanel({ evidence }: { evidence: Evidence[] }) {
   return (
     <section className="panel">
       <div className="section-heading">
-        <p className="eyebrow">Evidence</p>
-        <h2>Source-linked explanation</h2>
+        <p className="eyebrow">근거</p>
+        <h2>출처 기반 설명</h2>
       </div>
       <div className="evidence-list">
         {evidence.map((item) => (

@@ -34,18 +34,18 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
   return (
     <main className="shell">
-      <Link className="back-link" href="/">← Event queue</Link>
+      <Link className="back-link" href="/">← 이벤트 큐</Link>
       <section className="hero detail-hero">
-        <p className="eyebrow">{event.source} · {new Date(event.publishedAt).toLocaleString("en", { dateStyle: "full", timeStyle: "short" })}</p>
+        <p className="eyebrow">{event.source} · {new Date(event.publishedAt).toLocaleString("ko-KR", { dateStyle: "full", timeStyle: "short" })}</p>
         <h1>{event.title}</h1>
         <p>{event.summary}</p>
-        <a className="secondary-link" href={event.url} target="_blank" rel="noreferrer">Open source event</a>
+        <a className="secondary-link" href={event.url} target="_blank" rel="noreferrer">원문 이벤트 열기</a>
       </section>
 
       <section className="panel">
         <div className="section-heading">
-          <p className="eyebrow">Macro basket</p>
-          <h2>Multi-horizon impact scores</h2>
+          <p className="eyebrow">매크로 바스켓</p>
+          <h2>다중 기간 영향 점수</h2>
         </div>
         <div className="impact-grid">
           {analysis.forecasts.map((forecast) => <ImpactCard key={forecast.indicator} forecast={forecast} />)}
@@ -58,8 +58,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
       <section className="panel warning-panel">
         <div className="section-heading">
-          <p className="eyebrow">Limitations</p>
-          <h2>Uncertainty and review flags</h2>
+          <p className="eyebrow">한계</p>
+          <h2>불확실성과 검토 플래그</h2>
         </div>
         <ul>
           {analysis.limitations.map((limitation) => <li key={limitation}>{limitation}</li>)}

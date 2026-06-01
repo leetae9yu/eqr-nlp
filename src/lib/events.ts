@@ -3,12 +3,12 @@ import type { NewsEvent } from "./types";
 export const sampleEvents: NewsEvent[] = [
   {
     id: "chip-export-controls",
-    title: "Export-control headlines lift Korea FX and rate sensitivity",
-    source: "Public feed sample",
+    title: "수출통제 헤드라인이 한국 환율·금리 민감도를 높임",
+    source: "공개 피드 샘플",
     publishedAt: "2026-05-29T08:30:00Z",
     region: "KR",
     summary:
-      "A low-friction public news feed reports renewed export-control pressure in semiconductors, raising sensitivity around Korea's trade balance and policy-rate expectations.",
+      "저마찰 공개 피드가 반도체 수출통제 압력 재부각을 보도하면서 한국 무역수지와 정책금리 기대 민감도를 높입니다.",
     url: "https://example.com/public-feed/chip-export-controls",
     tags: ["semiconductors", "exports", "fx", "rates"],
     sentiment: -1,
@@ -20,21 +20,21 @@ export const sampleEvents: NewsEvent[] = [
     },
     evidence: [
       {
-        label: "Trade-sensitive headline",
-        source: "Public feed sample",
+        label: "무역 민감 헤드라인",
+        source: "공개 피드 샘플",
         url: "https://example.com/public-feed/chip-export-controls",
-        quote: "Export-control risk increased for Korea's semiconductor supply chain.",
+        quote: "한국 반도체 공급망의 수출통제 리스크가 증가했습니다.",
       },
     ],
   },
   {
     id: "energy-import-costs",
-    title: "Oil import-cost shock revives inflation and liquidity concerns",
-    source: "RSS fixture",
+    title: "유가 수입비용 충격이 물가·유동성 우려를 재점화",
+    source: "RSS 샘플",
     publishedAt: "2026-05-28T22:10:00Z",
     region: "Global",
     summary:
-      "Energy import prices rise after supply disruption headlines, creating a cross-current for USD/KRW, yields, and liquidity expectations.",
+      "공급 차질 헤드라인 이후 에너지 수입 가격이 상승하면서 USD/KRW, 금리, 유동성 기대에 복합 영향을 줍니다.",
     url: "https://example.com/rss/energy-import-costs",
     tags: ["energy", "inflation", "imports", "liquidity"],
     sentiment: -2,
@@ -46,21 +46,21 @@ export const sampleEvents: NewsEvent[] = [
     },
     evidence: [
       {
-        label: "Energy price shock",
-        source: "RSS fixture",
+        label: "에너지 가격 충격",
+        source: "RSS 샘플",
         url: "https://example.com/rss/energy-import-costs",
-        quote: "Higher oil import costs can pressure inflation and external balances.",
+        quote: "유가 수입비용 상승은 물가와 대외수지에 압력을 줄 수 있습니다.",
       },
     ],
   },
   {
     id: "liquidity-support-package",
-    title: "Liquidity-support package lowers near-term funding stress",
-    source: "GDELT-like fixture",
+    title: "유동성 지원 패키지가 단기 자금조달 스트레스를 낮춤",
+    source: "GDELT 유사 샘플",
     publishedAt: "2026-05-27T02:45:00Z",
     region: "KR",
     summary:
-      "A policy support package points to easier liquidity conditions while leaving rate expectations mixed across horizons.",
+      "정책 지원 패키지는 유동성 여건 완화를 시사하지만 기간별 금리 기대는 혼조입니다.",
     url: "https://example.com/gdelt/liquidity-support-package",
     tags: ["policy", "liquidity", "funding", "rates"],
     sentiment: 1,
@@ -72,10 +72,10 @@ export const sampleEvents: NewsEvent[] = [
     },
     evidence: [
       {
-        label: "Policy liquidity support",
-        source: "GDELT-like fixture",
+        label: "정책 유동성 지원",
+        source: "GDELT 유사 샘플",
         url: "https://example.com/gdelt/liquidity-support-package",
-        quote: "Liquidity facilities reduce short-term funding pressure.",
+        quote: "유동성 공급 장치는 단기 자금조달 압력을 낮춥니다.",
       },
     ],
   },

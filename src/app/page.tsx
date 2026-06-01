@@ -7,33 +7,32 @@ export default function HomePage() {
   return (
     <main className="shell">
       <section className="hero">
-        <p className="eyebrow">EQR NLP · Korea macro research demo</p>
-        <h1>Turn low-friction news events into explainable macro-impact forecasts.</h1>
+        <p className="eyebrow">EQR NLP · 한국 매크로 리서치</p>
+        <h1>DART 공시와 뉴스 이벤트를 설명 가능한 매크로 예측으로 전환합니다.</h1>
         <p>
-          A Vercel-ready analyst dashboard for scenario-style impact scoring across USD/KRW,
-          base-rate expectations, treasury yields, and M2 liquidity.
+          USD/KRW, 기준금리 기대, 국고채 금리, M2 유동성에 대해 근거·불확실성·백테스트 보정 정보를 함께 보여주는 Vercel-ready 분석 대시보드입니다.
         </p>
         <div className="hero-actions">
-          <Link className="primary-link" href={`/events/${sampleEvents[0].id}`}>Open sample analysis</Link>
-          <Link className="secondary-link" href="/graph">View knowledge graph</Link>
-          <Link className="secondary-link" href="/dart">Live DART</Link>
-          <Link className="secondary-link" href="/backtests">Backtest weights</Link>
-          <Link className="secondary-link" href="/portfolio">Portfolio simulation</Link>
-          <a className="secondary-link" href="https://github.com/emceeKim/korea-finance-mcp" target="_blank" rel="noreferrer">korea-finance-mcp</a>
+          <Link className="primary-link" href="/dart/forecasts">DART 예측 결과 보기</Link>
+          <Link className="secondary-link" href="/dart">DART 실시간 수집</Link>
+          <Link className="secondary-link" href={`/events/${sampleEvents[0].id}`}>샘플 예측</Link>
+          <Link className="secondary-link" href="/graph">지식그래프</Link>
+          <Link className="secondary-link" href="/backtests">백테스트 가중치</Link>
+          <Link className="secondary-link" href="/portfolio">포트폴리오 시뮬레이션</Link>
         </div>
       </section>
 
       <section className="grid two-col">
         <div className="panel">
           <div className="section-heading">
-            <p className="eyebrow">Low-friction feed</p>
-            <h2>Event queue</h2>
+            <p className="eyebrow">샘플 이벤트</p>
+            <h2>데모 이벤트 큐</h2>
           </div>
           <div className="event-list">
             {sampleEvents.map((event) => (
               <Link href={`/events/${event.id}`} className="event-card" key={event.id}>
                 <div>
-                  <p className="event-source">{event.source} · {new Date(event.publishedAt).toLocaleString("en", { dateStyle: "medium", timeStyle: "short" })}</p>
+                  <p className="event-source">{event.source} · {new Date(event.publishedAt).toLocaleString("ko-KR", { dateStyle: "medium", timeStyle: "short" })}</p>
                   <h3>{event.title}</h3>
                   <p>{event.summary}</p>
                 </div>
@@ -45,8 +44,8 @@ export default function HomePage() {
 
         <aside className="panel">
           <div className="section-heading">
-            <p className="eyebrow">Research boundaries</p>
-            <h2>v0 constraints</h2>
+            <p className="eyebrow">리서치 경계</p>
+            <h2>MVP 제약</h2>
           </div>
           <ul className="boundary-list">
             {productBoundaries.map((boundary) => <li key={boundary}>{boundary}</li>)}

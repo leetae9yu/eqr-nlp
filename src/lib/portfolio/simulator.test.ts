@@ -12,7 +12,7 @@ describe("portfolio simulation guardrails", () => {
     expect(scenario.kind).toBe("portfolio-scenario");
     expect(scenario.positions.length).toBeGreaterThan(0);
     expect(scenario.simulationResult.estimatedDelta).toEqual(expect.any(Number));
-    expect(scenario.disclaimer.toLowerCase()).toContain("hypothetical scenario simulation");
+    expect(scenario.disclaimer).toContain("가상 시나리오 시뮬레이션");
   });
 
   it("keeps route capabilities free of broker/order/advice/recommendation verbs", () => {
@@ -23,8 +23,8 @@ describe("portfolio simulation guardrails", () => {
   it("states prohibited activities only as exclusions in the disclaimer", () => {
     const copy = portfolioSimulationDisclaimer.toLowerCase();
 
-    expect(copy).toContain("not investment advice");
-    expect(copy).toContain("order execution");
-    expect(copy).toContain("buy/sell signal");
+    expect(copy).toContain("투자자문");
+    expect(copy).toContain("주문 실행");
+    expect(copy).toContain("매수/매도 신호");
   });
 });

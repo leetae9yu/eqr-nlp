@@ -10,7 +10,7 @@ export const fixtureSource: SourceNode = {
   id: "source:fixture-events",
   kind: "source",
   sourceKind: "fixture",
-  name: "EQR fixture events",
+  name: "EQR 샘플 이벤트",
   homepageUrl: "https://github.com/leetae9yu/eqr-nlp",
   freeTierOnly: true,
   paidRequiresApproval: false,
@@ -40,12 +40,12 @@ export class FixtureSourceAdapter implements SourceAdapter {
         url: event.url,
         publishedAt: event.publishedAt,
         retrievedAt: "2026-05-31T00:00:00.000Z",
-        language: "en",
+        language: "ko",
         rawText: `${event.summary}\n${event.evidence.map((item) => item.quote).join("\n")}`,
         summary: event.summary,
         citation: `${event.source}: ${event.title}`,
       })),
-      warnings: ["Fixture documents are deterministic and not live source data."],
+      warnings: ["Fixture 문서는 결정론적 샘플이며 실시간 소스 데이터가 아닙니다."],
     };
   }
 }

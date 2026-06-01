@@ -24,7 +24,7 @@ export class RssNewsAdapter implements SourceAdapter {
       id: this.id,
       kind: "source",
       sourceKind: "rss",
-      name: "Configured RSS feed",
+      name: "설정된 RSS 피드",
       homepageUrl: feedUrl,
       freeTierOnly: true,
       paidRequiresApproval: false,
@@ -37,12 +37,12 @@ export class RssNewsAdapter implements SourceAdapter {
     const limit = clampLimit(input.limit);
     const response = await this.fetcher(this.feedUrl);
     if (!response.ok) {
-      return { source: this.source, availability: { ok: false, reason: `RSS request failed: ${response.status}` }, documents: [], warnings: [] };
+      return { source: this.source, availability: { ok: false, reason: `RSS 요청 실패: ${response.status}` }, documents: [], warnings: [] };
     }
     const xml = await response.text();
     const items = [...xml.matchAll(/<item[\s\S]*?<\/item>/gi)].map((match) => match[0]).slice(0, limit);
     const documents = items.map((item, index) => {
-      const title = stripHtml(textBetween(item, "title")) || `RSS item ${index + 1}`;
+      const title = stripHtml(textBetween(item, "title")) || `RSS 항목 ${index + 1}`;
       const url = stripHtml(textBetween(item, "link")) || this.feedUrl;
       const summary = stripHtml(textBetween(item, "description"));
       const publishedAt = new Date(stripHtml(textBetween(item, "pubDate")) || Date.now()).toISOString();

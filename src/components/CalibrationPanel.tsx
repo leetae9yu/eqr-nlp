@@ -10,14 +10,14 @@ export function CalibrationPanel({ calibrations }: CalibrationPanelProps) {
   return (
     <section className="panel">
       <div className="section-heading">
-        <p className="eyebrow">Backtest calibration</p>
-        <h2>Magnitude-error context</h2>
+        <p className="eyebrow">백테스트 보정</p>
+        <h2>Magnitude-error 맥락</h2>
       </div>
       <table className="horizon-table">
         <thead>
           <tr>
-            <th>Weight</th>
-            <th>Samples</th>
+            <th>가중치</th>
+            <th>샘플</th>
             <th>MAE</th>
             <th>RMSE</th>
             <th>sMAPE</th>
@@ -35,7 +35,7 @@ export function CalibrationPanel({ calibrations }: CalibrationPanelProps) {
           ))}
         </tbody>
       </table>
-      <p className="muted">Run: {calibrations[0].runId}. This is fixture-calibrated research infrastructure, not a trading signal.</p>
+      <p className="muted">Run: {calibrations[0].runId}. 이 값은 리서치용 보정 인프라이며 매매 신호가 아닙니다.</p>
     </section>
   );
 }

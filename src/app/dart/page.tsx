@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Badge } from "@/components/Badge";
 import { hasDartApiKey } from "@/lib/env";
-import { buildOntologyPromotionPackage } from "@/lib/ontology/ontology-factory";
 import { getDartGraphStatus } from "@/lib/kg/graph-provenance";
+import { promotionStatusLabelKo } from "@/lib/korean-labels";
+import { buildOntologyPromotionPackage } from "@/lib/ontology/ontology-factory";
 import { OpenDartAdapter } from "@/lib/sources/dart-adapter";
+import { parseLimit } from "@/lib/sources/source-types";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -17,7 +19,7 @@ function value(params: Record<string, string | string[] | undefined>, key: strin
 
 export default async function DartPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
-  const limit = Number(value(params, "limit") ?? 20);
+  const limit = parseLimit(value(params, "limit"), 20, 100);
   const input = {
     corpCode: value(params, "corpCode"),
     startDate: value(params, "startDate"),
@@ -32,28 +34,31 @@ export default async function DartPage({ searchParams }: { searchParams: SearchP
 
   return (
     <main className="shell">
-      <Link className="back-link" href="/">← Dashboard</Link>
+      <Link className="back-link" href="/">← 대시보드</Link>
       <section className="hero detail-hero">
-        <p className="eyebrow">Live OpenDART ingestion</p>
-        <h1>Read DART disclosures from Vercel server env.</h1>
+        <p className="eyebrow">OpenDART 실시간 수집</p>
+        <h1>Vercel 서버 환경 변수에서 DART 공시를 읽습니다.</h1>
         <p>
-          This page uses the server-side <code>DART_API_KEY</code> environment variable, falls back to
-          <code> OPENDART_API_KEY</code>, converts disclosures into documents, and runs the same KG extraction pipeline.
+          서버 측 <code>DART_API_KEY</code>를 우선 사용하고, 없으면 <code>OPENDART_API_KEY</code>를 사용합니다. 공시를 문서로 변환한 뒤 동일한 지식그래프 추출 파이프라인과 온톨로지 품질 게이트를 실행합니다.
         </p>
         <div className="tag-row">
-          <Badge>{keyConfigured ? "DART key configured" : "DART key missing"}</Badge>
-          <Badge>{result.availability.ok ? "OpenDART available" : "OpenDART unavailable"}</Badge>
-          <Badge>{result.documents.length} disclosures</Badge>
-          <Badge>{graphStatus.counts.event} extracted events</Badge>
-          <Badge>{ontologyPack.qualityReport.totalPromoted} promoted claims</Badge>
+          <Badge>{keyConfigured ? "DART 키 설정됨" : "DART 키 없음"}</Badge>
+          <Badge>{result.availability.ok ? "OpenDART 연결됨" : "OpenDART 미연결"}</Badge>
+          <Badge>{result.documents.length}개 공시</Badge>
+          <Badge>{graphStatus.counts.event}개 이벤트 추출</Badge>
+          <Badge>{ontologyPack.qualityReport.totalPromoted}개 claim 승격</Badge>
+        </div>
+        <div className="hero-actions">
+          <Link className="primary-link" href="/dart/forecasts">DART 예측 결과 보기</Link>
+          <a className="secondary-link" href="/api/dart/ontology-pack">온톨로지 팩 JSON</a>
         </div>
       </section>
 
       {result.warnings.length > 0 || graphStatus.warnings.length > 0 ? (
         <section className="panel warning-panel">
           <div className="section-heading">
-            <p className="eyebrow">Warnings</p>
-            <h2>Runtime status</h2>
+            <p className="eyebrow">알림</p>
+            <h2>런타임 상태</h2>
           </div>
           <ul className="boundary-list">
             {[...result.warnings, ...graphStatus.warnings].map((warning) => <li key={warning}>{warning}</li>)}
@@ -62,51 +67,50 @@ export default async function DartPage({ searchParams }: { searchParams: SearchP
         </section>
       ) : null}
 
-
       <section className="panel">
         <div className="section-heading">
-          <p className="eyebrow">Ontology factory</p>
-          <h2>Candidate → validated → promoted lifecycle</h2>
+          <p className="eyebrow">온톨로지 팩토리</p>
+          <h2>후보 → 검증 → 승격 수명주기</h2>
         </div>
         <div className="tag-row">
           <Badge>{ontologyPack.manifest.version}</Badge>
-          <Badge>evidence {ontologyPack.qualityReport.totalEvidence}</Badge>
-          <Badge>claims {ontologyPack.qualityReport.totalClaims}</Badge>
-          <Badge>promoted {ontologyPack.qualityReport.totalPromoted}</Badge>
-          <Badge>rejected {ontologyPack.qualityReport.totalRejected}</Badge>
-          <Badge>gate pass {Math.round(ontologyPack.qualityReport.gatePassRate * 100)}%</Badge>
+          <Badge>근거 {ontologyPack.qualityReport.totalEvidence}</Badge>
+          <Badge>가설 {ontologyPack.qualityReport.totalClaims}</Badge>
+          <Badge>승격 {ontologyPack.qualityReport.totalPromoted}</Badge>
+          <Badge>거절 {ontologyPack.qualityReport.totalRejected}</Badge>
+          <Badge>게이트 통과 {Math.round(ontologyPack.qualityReport.gatePassRate * 100)}%</Badge>
         </div>
         <p className="muted">
-          <a href="/api/dart/ontology-pack">Download ontology pack JSON</a> · {" "}
-          <a href="/api/dart/ontology-pack?format=jsonl">Download nodes JSONL</a>
+          <a href="/api/dart/ontology-pack">온톨로지 팩 JSON 다운로드</a> ·{" "}
+          <a href="/api/dart/ontology-pack?format=jsonl">노드 JSONL 다운로드</a>
         </p>
       </section>
 
       <section className="grid two-col">
         <div className="panel">
           <div className="section-heading">
-            <p className="eyebrow">Disclosures</p>
-            <h2>Latest documents</h2>
+            <p className="eyebrow">공시 문서</p>
+            <h2>최근 DART 문서</h2>
           </div>
           <div className="event-list">
             {result.documents.map((document) => (
               <a className="event-card" href={document.url} key={document.id} target="_blank" rel="noreferrer">
                 <div>
-                  <p className="event-source">{document.sourceId} · {new Date(document.publishedAt).toLocaleDateString("en")}</p>
+                  <p className="event-source">{document.sourceId} · {new Date(document.publishedAt).toLocaleDateString("ko-KR")}</p>
                   <h3>{document.title}</h3>
                   <p>{document.summary}</p>
                   <p className="muted">{document.citation}</p>
                 </div>
               </a>
             ))}
-            {result.documents.length === 0 ? <p className="muted">No live DART disclosures were returned for this query.</p> : null}
+            {result.documents.length === 0 ? <p className="muted">이 쿼리에서 반환된 실시간 DART 공시가 없습니다.</p> : null}
           </div>
         </div>
 
         <aside className="panel">
           <div className="section-heading">
-            <p className="eyebrow">KG ingestion</p>
-            <h2>Live graph counts</h2>
+            <p className="eyebrow">지식그래프 수집</p>
+            <h2>실시간 그래프 개수</h2>
           </div>
           <ul className="boundary-list">
             {Object.entries(graphStatus.counts).filter(([, count]) => count > 0).map(([kind, count]) => (
@@ -114,13 +118,13 @@ export default async function DartPage({ searchParams }: { searchParams: SearchP
             ))}
           </ul>
           <div className="section-heading" style={{ marginTop: 24 }}>
-            <p className="eyebrow">Promotion decisions</p>
-            <h2>Quality gates</h2>
+            <p className="eyebrow">승격 결정</p>
+            <h2>품질 게이트</h2>
           </div>
           <ul className="boundary-list">
             {ontologyPack.promotions.slice(0, 8).map((promotion) => (
               <li key={promotion.id}>
-                {promotion.status}: {promotion.claimId.replace("ontology-claim:", "")}
+                {promotionStatusLabelKo(promotion.status)}: {promotion.claimId.replace("ontology-claim:", "")}
               </li>
             ))}
           </ul>

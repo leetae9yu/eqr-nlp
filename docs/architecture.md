@@ -4,7 +4,7 @@ EQR NLP is static-first for v0, with server-only seams for live ingestion later.
 
 ## Runtime shape
 
-- **Next.js App Router** renders the dashboard, event detail, graph, backtest, and portfolio-simulation routes.
+- **Next.js App Router** renders the Korean dashboard, DART forecast, event detail, graph, backtest, and portfolio-simulation routes.
 - **Static sample events** represent low-friction public feeds until a live ingestion job is approved.
 - **Source adapters** isolate fixture, RSS, GDELT DOC API-style, and OpenDART disclosure inputs behind `SourceAdapter`; OpenDART reads `DART_API_KEY` first and `OPENDART_API_KEY` as a fallback.
 - **`KoreaFinanceMcpAdapter`** isolates macro data lookup so a live `korea-finance-mcp` transport can replace fixtures later.
@@ -15,7 +15,7 @@ EQR NLP is static-first for v0, with server-only seams for live ingestion later.
 ## Data flow
 
 ```text
-SourceAdapter -> Document -> RuleBasedExtractor -> Event/Entity/Indicator hints
+SourceAdapter -> Document -> OntologyFactory -> Evidence/Claim/Promotion -> RuleBasedExtractor -> Event/Entity/Indicator hints
              -> GraphStore -> provenance views
              -> Backtest calibration -> Weight nodes
              -> Forecast DTO -> Event, backtest, graph, portfolio simulation UI

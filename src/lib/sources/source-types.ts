@@ -28,7 +28,13 @@ export type SourceAdapter = {
 
 export type FetchLike = (input: string | URL, init?: RequestInit) => Promise<Response>;
 
+export function parseLimit(value: number | string | null | undefined, fallback = 10, max = 25) {
+  const parsed = typeof value === "number" ? value : value ? Number(value) : fallback;
+  const finite = Number.isFinite(parsed) ? parsed : fallback;
+  const integer = Math.floor(finite);
+  return Math.max(1, Math.min(integer, max));
+}
+
 export function clampLimit(limit: number | undefined, max = 25) {
-  if (limit === undefined) return Math.min(10, max);
-  return Math.max(1, Math.min(limit, max));
+  return parseLimit(limit, 10, max);
 }

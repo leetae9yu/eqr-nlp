@@ -14,8 +14,8 @@ export function MiniChart({ series, label }: { series: Point[]; label: string })
     .join(" ");
 
   return (
-    <figure className="mini-chart" aria-label={`${label} time-series chart`}>
-      <svg viewBox="0 0 100 52" role="img" aria-label={`${label} sparkline`}>
+    <figure className="mini-chart" aria-label={`${label} 시계열 차트`}>
+      <svg viewBox="0 0 100 52" role="img" aria-label={`${label} 미니 추세선`}>
         <polyline points={points} fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       <figcaption>

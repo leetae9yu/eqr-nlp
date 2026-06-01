@@ -4,11 +4,11 @@ export const macroSnapshots: Record<MacroIndicatorId, MacroSnapshot> = {
   "usd-krw": {
     indicator: "usd-krw",
     label: "USD/KRW",
-    unit: "KRW per USD",
+    unit: "원/달러",
     latestValue: 1382.4,
     previousValue: 1374.1,
     asOf: "2026-05-29",
-    source: "Sample ECOS/KRX adapter fixture",
+    source: "ECOS/KRX 샘플",
     series: [
       { date: "2026-05-20", value: 1369.2 },
       { date: "2026-05-21", value: 1372.7 },
@@ -22,12 +22,12 @@ export const macroSnapshots: Record<MacroIndicatorId, MacroSnapshot> = {
   },
   "base-rate-expectation": {
     indicator: "base-rate-expectation",
-    label: "Base-rate expectation",
-    unit: "bp implied shift",
+    label: "기준금리 기대",
+    unit: "bp 내재 변화",
     latestValue: -8,
     previousValue: -4,
     asOf: "2026-05-29",
-    source: "Sample policy-rate expectation fixture",
+    source: "정책금리 기대 샘플",
     series: [
       { date: "2026-05-20", value: -2 },
       { date: "2026-05-21", value: -3 },
@@ -41,12 +41,12 @@ export const macroSnapshots: Record<MacroIndicatorId, MacroSnapshot> = {
   },
   "treasury-yield": {
     indicator: "treasury-yield",
-    label: "Korea treasury yield",
-    unit: "% 3Y",
+    label: "한국 국고채 금리",
+    unit: "% 3년",
     latestValue: 3.18,
     previousValue: 3.12,
     asOf: "2026-05-29",
-    source: "Sample KRX/market index adapter fixture",
+    source: "KRX/시장지표 샘플",
     series: [
       { date: "2026-05-20", value: 3.08 },
       { date: "2026-05-21", value: 3.1 },
@@ -60,12 +60,12 @@ export const macroSnapshots: Record<MacroIndicatorId, MacroSnapshot> = {
   },
   "m2-liquidity": {
     indicator: "m2-liquidity",
-    label: "M2 liquidity",
-    unit: "YoY %",
+    label: "M2 유동성",
+    unit: "전년대비 %",
     latestValue: 4.1,
     previousValue: 3.8,
     asOf: "2026-05-29",
-    source: "Sample ECOS adapter fixture",
+    source: "ECOS 샘플",
     series: [
       { date: "2025-10", value: 3.2 },
       { date: "2025-11", value: 3.3 },

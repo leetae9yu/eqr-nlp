@@ -1,5 +1,6 @@
 import { HorizonTable } from "./HorizonTable";
 import { MiniChart } from "./MiniChart";
+import { directionLabelKo, indicatorLabelKo } from "@/lib/korean-labels";
 import type { IndicatorForecast } from "@/lib/types";
 
 function directionSymbol(direction: IndicatorForecast["direction"]) {
@@ -15,18 +16,18 @@ export function ImpactCard({ forecast }: { forecast: IndicatorForecast }) {
       <div className="impact-card-header">
         <div>
           <p className="eyebrow">{forecast.indicator}</p>
-          <h3>{forecast.label}</h3>
+          <h3>{indicatorLabelKo(forecast.indicator)}</h3>
         </div>
         <div className={`score score-${forecast.direction}`}>
           <span>{directionSymbol(forecast.direction)}</span>
           <strong>{forecast.impactScore > 0 ? "+" : ""}{forecast.impactScore.toFixed(1)}</strong>
         </div>
       </div>
-      <p className="muted">Baseline: {forecast.baseline} {forecast.unit} · confidence {Math.round(forecast.confidence * 100)}%</p>
+      <p className="muted">기준값: {forecast.baseline} {forecast.unit} · 신뢰도 {Math.round(forecast.confidence * 100)}% · 방향 {directionLabelKo(forecast.direction)}</p>
       <HorizonTable forecasts={forecast.forecasts} />
       <MiniChart series={forecast.series} label={forecast.label} />
       <details>
-        <summary>Rationales and uncertainty</summary>
+        <summary>근거 로직과 불확실성</summary>
         <ul>
           {forecast.forecasts.map((item) => <li key={item.horizon}>{item.rationale}</li>)}
           {forecast.uncertainty.map((item) => <li key={item}>{item}</li>)}

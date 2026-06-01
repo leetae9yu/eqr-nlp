@@ -22,10 +22,11 @@ EQR NLP is a Vercel-ready research demo for Korean macro-impact forecasting from
 
 ## App routes
 
-- `/` — event queue and research boundaries.
+- `/` — Korean dashboard with DART-first forecast entry point and research boundaries.
 - `/events/[id]` — macro basket forecast with evidence, uncertainty, and calibration context.
 - `/graph` — live OpenDART KG provenance when `DART_API_KEY` is configured; fixture fallback otherwise.
 - `/dart` — server-rendered live OpenDART disclosure list, KG ingestion status, ontology promotion gates, and pack export links.
+- `/dart/forecasts` — live OpenDART disclosures converted into macro forecast result cards.
 - `/backtests` — deterministic fixture calibration run and generated weights.
 - `/portfolio` — hypothetical scenario simulation only; no broker, order, personalized advice, recommendation, buy/sell signal, or target-price workflow.
 

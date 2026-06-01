@@ -1,6 +1,6 @@
 export const productBoundaries = [
-  "Research demo for analyst workflows",
-  "Hypothetical portfolio simulation only; no order execution, broker integration, or personalized advice",
-  "No paid news vendor requirement for the MVP",
-  "Every score must show evidence and uncertainty",
+  "애널리스트 리서치 워크플로용 데모",
+  "가상 포트폴리오 시뮬레이션만 제공; 주문 실행, 브로커 연동, 개인화 자문 없음",
+  "MVP에는 유료 뉴스 벤더가 필요하지 않음",
+  "모든 점수는 근거와 불확실성을 함께 표시",
 ] as const;

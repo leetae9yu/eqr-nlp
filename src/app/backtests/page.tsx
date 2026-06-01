@@ -7,34 +7,33 @@ export default function BacktestsPage() {
 
   return (
     <main className="shell">
-      <Link className="back-link" href="/">← Dashboard</Link>
+      <Link className="back-link" href="/">← 대시보드</Link>
       <section className="hero detail-hero">
-        <p className="eyebrow">Backtest-calibrated weights</p>
-        <h1>Estimate signed magnitude with explicit error metrics.</h1>
+        <p className="eyebrow">백테스트 보정 가중치</p>
+        <h1>명시적인 오차 지표로 signed magnitude를 보정합니다.</h1>
         <p>
-          Fixture historical windows calibrate event-to-indicator weights with MAE, RMSE, and zero-safe sMAPE.
-          Live historical backfills can replace these fixtures without changing the forecast UI contract.
+          fixture 과거 구간으로 이벤트-지표 가중치를 MAE, RMSE, zero-safe sMAPE 기준으로 보정합니다. 이후 실시간 과거 데이터 backfill이 붙어도 예측 UI 계약은 유지됩니다.
         </p>
         <div className="tag-row">
           <Badge>{backtestRun.weightVersion}</Badge>
-          <Badge>{backtestRun.metricSummary.sampleSize} examples</Badge>
+          <Badge>{backtestRun.metricSummary.sampleSize}개 예시</Badge>
           <Badge>cutoff {backtestRun.dataCutoff}</Badge>
         </div>
       </section>
 
       <section className="panel">
         <div className="section-heading">
-          <p className="eyebrow">Weights</p>
-          <h2>Calibration output</h2>
+          <p className="eyebrow">가중치</p>
+          <h2>보정 결과</h2>
         </div>
         <table className="horizon-table">
           <thead>
             <tr>
-              <th>Event kind</th>
-              <th>Indicator</th>
-              <th>Horizon</th>
-              <th>Weight</th>
-              <th>Samples</th>
+              <th>이벤트 종류</th>
+              <th>지표</th>
+              <th>기간</th>
+              <th>가중치</th>
+              <th>샘플</th>
               <th>MAE/RMSE/sMAPE</th>
             </tr>
           </thead>

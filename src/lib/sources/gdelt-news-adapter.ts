@@ -45,11 +45,11 @@ export class GdeltNewsAdapter implements SourceAdapter {
     url.searchParams.set("maxrecords", String(limit));
     const response = await this.fetcher(url);
     if (!response.ok) {
-      return { source: this.source, availability: { ok: false, reason: `GDELT request failed: ${response.status}` }, documents: [], warnings: [] };
+      return { source: this.source, availability: { ok: false, reason: `GDELT 요청 실패: ${response.status}` }, documents: [], warnings: [] };
     }
     const payload = await response.json() as { articles?: GdeltArticle[] };
     const documents = (payload.articles ?? []).slice(0, limit).map((article, index) => {
-      const title = article.title ?? `GDELT article ${index + 1}`;
+      const title = article.title ?? `GDELT 기사 ${index + 1}`;
       const articleUrl = article.url ?? this.source.homepageUrl;
       return createDocument({
         id: createDocumentId(this.source, articleUrl),

@@ -1,3 +1,4 @@
+import { directionLabelKo, horizonLabelKo } from "@/lib/korean-labels";
 import type { HorizonForecast } from "@/lib/types";
 
 export function HorizonTable({ forecasts }: { forecasts: HorizonForecast[] }) {
@@ -5,17 +6,17 @@ export function HorizonTable({ forecasts }: { forecasts: HorizonForecast[] }) {
     <table className="horizon-table">
       <thead>
         <tr>
-          <th>Horizon</th>
-          <th>Direction</th>
-          <th>Impact</th>
-          <th>Confidence</th>
+          <th>기간</th>
+          <th>방향</th>
+          <th>영향</th>
+          <th>신뢰도</th>
         </tr>
       </thead>
       <tbody>
         {forecasts.map((forecast) => (
           <tr key={forecast.horizon}>
-            <td>{forecast.horizon}</td>
-            <td>{forecast.direction}</td>
+            <td>{horizonLabelKo(forecast.horizon)}</td>
+            <td>{directionLabelKo(forecast.direction)}</td>
             <td>{forecast.impact > 0 ? "+" : ""}{forecast.impact.toFixed(1)}</td>
             <td>{Math.round(forecast.confidence * 100)}%</td>
           </tr>

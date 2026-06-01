@@ -41,9 +41,9 @@ describe("forecast domain", () => {
   it("keeps structured product boundaries out of trading tooling", () => {
     const copy = productBoundaries.join(" ").toLowerCase();
 
-    expect(copy).toContain("no order execution");
-    expect(copy).toContain("portfolio simulation");
-    expect(copy).toContain("personalized advice");
+    expect(copy).toContain("주문 실행");
+    expect(copy).toContain("포트폴리오 시뮬레이션");
+    expect(copy).toContain("개인화 자문");
     expect(copy).not.toContain("buy signal");
     expect(copy).not.toContain("sell signal");
     expect(copy).not.toContain("target price");

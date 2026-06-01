@@ -17,9 +17,9 @@ const assetIndicatorMap: Record<HypotheticalPosition["assetClass"], MacroIndicat
 };
 
 export const sampleHypotheticalPositions: HypotheticalPosition[] = [
-  { label: "KRW receivable exposure", assetClass: "fx", notional: 1_000_000, sensitivity: -0.08 },
-  { label: "Korea duration sleeve", assetClass: "rates", notional: 500_000, sensitivity: -0.12 },
-  { label: "Liquidity reserve", assetClass: "cash", notional: 300_000, sensitivity: 0.05 },
+  { label: "KRW 매출채권 노출", assetClass: "fx", notional: 1_000_000, sensitivity: -0.08 },
+  { label: "한국 duration sleeve", assetClass: "rates", notional: 500_000, sensitivity: -0.12 },
+  { label: "유동성 reserve", assetClass: "cash", notional: 300_000, sensitivity: 0.05 },
 ];
 
 function round(value: number, digits = 2) {
@@ -38,13 +38,13 @@ export function simulateHypotheticalPortfolio(analysis: EventAnalysis, positions
   return {
     id: `portfolio-scenario:${analysis.event.id}`,
     kind: "portfolio-scenario",
-    name: `Hypothetical macro basket simulation · ${analysis.event.title}`,
+    name: `가상 매크로 바스켓 시뮬레이션 · ${analysis.event.title}`,
     createdAt: analysis.generatedAt,
     positions,
     assumptions: [
-      "Position notionals are user-supplied hypothetical research inputs.",
-      "Sensitivity values are simple scenario multipliers, not optimized allocations.",
-      "No broker, execution, suitability, or personalized advisory workflow is implemented.",
+      "포지션 명목금액은 사용자가 가정한 리서치 입력값입니다.",
+      "민감도 값은 단순 시나리오 multiplier이며 최적화된 배분이 아닙니다.",
+      "브로커, 주문 실행, 적합성 판단, 개인화 자문 워크플로는 구현하지 않습니다.",
     ],
     forecastIds: analysis.forecasts.flatMap((forecast) => forecast.forecasts.map((horizon) => `${forecast.indicator}:${horizon.horizon}`)),
     simulationResult: {

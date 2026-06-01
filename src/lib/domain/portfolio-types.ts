@@ -22,4 +22,4 @@ export type PortfolioScenarioNode = {
 };
 
 export const portfolioSimulationDisclaimer =
-  "Hypothetical scenario simulation for research only. It is not investment advice, order execution, portfolio management, a recommendation, a buy/sell signal, or a target price.";
+  "가상 시나리오 시뮬레이션 전용입니다. 투자자문, 주문 실행, 포트폴리오 관리, 추천, 매수/매도 신호, 목표가는 제공하지 않습니다.";

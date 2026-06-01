@@ -6,6 +6,7 @@ import { OpenDartAdapter } from "./dart-adapter";
 import { FixtureSourceAdapter } from "./fixture-source-adapter";
 import { GdeltNewsAdapter } from "./gdelt-news-adapter";
 import { RssNewsAdapter } from "./rss-news-adapter";
+import { clampLimit, parseLimit } from "./source-types";
 
 function response(body: string | object, ok = true) {
   return Promise.resolve({
@@ -39,6 +40,15 @@ describe("source adapters", () => {
 
     expect(fetcher).toHaveBeenCalledOnce();
     expect(result.documents[0].citation).toContain("GDELT");
+  });
+
+  it("sanitizes invalid limit inputs before source fetches", () => {
+    expect(parseLimit("not-a-number", 6)).toBe(6);
+    expect(parseLimit("0", 6)).toBe(1);
+    expect(parseLimit("-4", 6)).toBe(1);
+    expect(clampLimit(Number.NaN, 25)).toBe(10);
+    expect(clampLimit(2.9, 25)).toBe(2);
+    expect(clampLimit(999, 25)).toBe(25);
   });
 
   it("does not crash when DART API key is missing", async () => {

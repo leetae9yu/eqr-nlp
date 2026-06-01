@@ -43,13 +43,13 @@ function inferEventKind(event: NewsEvent) {
 
 function rationaleFor(indicator: MacroIndicatorId, horizon: ForecastHorizon, direction: Direction) {
   const base = {
-    "usd-krw": "FX sensitivity is driven by trade-balance and external-risk language in the event.",
-    "base-rate-expectation": "Policy-rate expectation reacts to inflation, growth, and funding-stress clues.",
-    "treasury-yield": "Treasury-yield impact reflects duration, inflation, and policy expectation channels.",
-    "m2-liquidity": "Liquidity impact reflects credit, funding, and money-supply transmission clues.",
+    "usd-krw": "환율 민감도는 무역수지, 외부 위험, 원화/달러 관련 표현에 반응합니다.",
+    "base-rate-expectation": "기준금리 기대는 물가, 성장, 자금조달 스트레스 단서에 반응합니다.",
+    "treasury-yield": "국고채 금리 영향은 듀레이션, 물가, 정책금리 기대 경로를 반영합니다.",
+    "m2-liquidity": "유동성 영향은 신용, 자금조달, 통화량 전이 단서를 반영합니다.",
   }[indicator];
 
-  return `${horizon} ${direction} case: ${base}`;
+  return `${horizon} ${direction} 시나리오: ${base}`;
 }
 
 export async function analyzeEvent(
@@ -71,10 +71,10 @@ export async function analyzeEvent(
       const indicatorWeights = calibration.weightNodes.filter((weight) => weight.indicatorId === indicator);
       const calibrationEvidence = indicatorWeights[0]
         ? [{
-            label: `Backtest calibration ${calibration.backtestRun.weightVersion}`,
-            source: "Fixture historical backtest",
+            label: `백테스트 보정 ${calibration.backtestRun.weightVersion}`,
+            source: "Fixture 과거 백테스트",
             url: "https://github.com/leetae9yu/eqr-nlp",
-            quote: `${indicatorWeights[0].sampleSize} samples; MAE ${indicatorWeights[0].mae}, RMSE ${indicatorWeights[0].rmse}, sMAPE ${indicatorWeights[0].smape}%.`,
+            quote: `${indicatorWeights[0].sampleSize}개 샘플; MAE ${indicatorWeights[0].mae}, RMSE ${indicatorWeights[0].rmse}, sMAPE ${indicatorWeights[0].smape}%.`,
           }]
         : [];
 
@@ -92,7 +92,7 @@ export async function analyzeEvent(
             label: snapshot.label,
             source: snapshot.source,
             url: "https://github.com/emceeKim/korea-finance-mcp",
-            quote: `${snapshot.label} latest fixture is ${snapshot.latestValue} ${snapshot.unit} as of ${snapshot.asOf}.`,
+            quote: `${snapshot.label} 샘플 최신값은 ${snapshot.asOf} 기준 ${snapshot.latestValue} ${snapshot.unit}입니다.`,
           },
           ...calibrationEvidence,
         ],
@@ -102,9 +102,9 @@ export async function analyzeEvent(
           citations: event.evidence.map((item) => item.url),
         },
         uncertainty: [
-          "Fixture data is used until a live korea-finance-mcp transport is configured.",
-          "Scores are scenario aids for research demos, not investment recommendations.",
-          "Backtest metrics use deterministic fixture history until real historical market-data backfills are connected.",
+          "실시간 korea-finance-mcp 전송 계층이 연결되기 전까지 매크로 스냅샷은 fixture를 사용합니다.",
+          "점수는 리서치 데모용 시나리오 보조 지표이며 투자 추천이 아닙니다.",
+          "실제 과거 market-data backfill이 연결되기 전까지 백테스트 지표는 결정론적 fixture 이력을 사용합니다.",
         ],
         series: snapshot.series,
         forecasts: HORIZONS.map((horizon) => {
@@ -118,7 +118,7 @@ export async function analyzeEvent(
             direction: horizonDirection,
             impact: Number((impact * 100).toFixed(1)),
             confidence: Number(clamp((confidence - (horizon === "1M" ? 0.08 : horizon === "1W" ? 0.03 : 0)) * (calibratedWeight?.confidence ?? 1), 0.1, 0.95).toFixed(2)),
-            rationale: `${rationaleFor(indicator, horizon, horizonDirection)}${calibratedWeight ? ` Backtest weight ${calibratedWeight.weight} from ${calibratedWeight.sampleSize} samples.` : " No exact calibrated weight exists for this fixture horizon yet."}`,
+            rationale: `${rationaleFor(indicator, horizon, horizonDirection)}${calibratedWeight ? ` 백테스트 가중치 ${calibratedWeight.weight}, 샘플 ${calibratedWeight.sampleSize}개.` : " 이 fixture 기간에 정확히 매칭되는 보정 가중치는 아직 없습니다."}`,
             calibration: calibratedWeight ? {
               runId: calibratedWeight.calibrationRunId,
               weightId: calibratedWeight.id,
@@ -139,8 +139,8 @@ export async function analyzeEvent(
     generatedAt: "2026-05-31T00:00:00.000Z",
     forecasts,
     limitations: [
-      "Low-friction public feeds and sample macro fixtures are used for v0 reproducibility.",
-      "Legal/compliance review is deferred before any production monetization or advice-like positioning.",
+      "v0 재현성을 위해 저마찰 공개 피드와 샘플 매크로 fixture를 사용합니다.",
+      "프로덕션/수익화/자문형 포지셔닝 전 법무·컴플라이언스 검토가 필요합니다.",
     ],
   };
 }
